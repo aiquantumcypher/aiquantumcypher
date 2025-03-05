@@ -91,6 +91,11 @@
             border-radius: 5px;
             text-decoration: none;
             font-weight: bold;
+            cursor: pointer;
+        }
+        .cta:hover {
+            background: #ff0;
+            box-shadow: 0px 0px 10px #ff0;
         }
         footer {
             background: rgba(0, 0, 0, 0.9);
@@ -111,7 +116,7 @@
     </nav>
     <section>
         <div class="hero">Quantum, AI, and Spatial Computing Innovation</div>
-        <div class="subtext">Pioneering next generation technologies since 2008</div>
+        <div class="subtext">Pioneering next-generation technologies since 2008</div>
         <img src="quantum_computer.jpg" alt="Quantum Computer" class="main-image">
     </section>
     <section id="about">
@@ -154,11 +159,21 @@
     <section id="contact">
         <h2>Join the Future</h2>
         <p>We are looking for partners and pioneers who share our vision. Contact us for more information.</p>
-        <a href="mailto:contact@aiquantumcipher.com" class="cta">Contact Us</a>
+        <p>
+            <a id="email-link" class="cta">Contact Us</a>
+        </p>
     </section>
     <footer>
         <p>&copy; 2025 AI Quantum Cipher. All Rights Reserved.</p>
     </footer>
+
+    <script>
+        document.getElementById('email-link').addEventListener('click', function() {
+            let user = "aiqcypher";
+            let domain = "proton.me";
+            let email = user + "@" + domain;
+            window.location.href = "mailto:" + email;
+        });
+    </script>
 </body>
 </html>
-
