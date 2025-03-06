@@ -8,7 +8,15 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/js/controls/OrbitControls.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; background: #000; color: white; text-align: center; margin: 0; padding: 0; }
+        body { 
+            font-family: Arial, sans-serif; 
+            background: url('https://aiquantumcypher.github.io/aiquantumcypher/quantum_hologram.jpg') no-repeat center center fixed;
+            background-size: cover; 
+            color: white; 
+            text-align: center; 
+            margin: 0; 
+            padding: 0;
+        }
         header { background: rgba(0, 0, 0, 0.8); padding: 40px; text-align: center; font-size: 24px; font-weight: bold; line-height: 1.5; }
         nav { text-align: center; padding: 15px; background: rgba(0, 0, 0, 0.9); }
         nav a { color: #0ff; margin: 0 20px; text-decoration: none; font-size: 20px; }
@@ -16,6 +24,9 @@
         .main-image { width: 80%; max-width: 600px; margin: 20px auto; display: block; border-radius: 10px; }
         .three-container { width: 400px; height: 400px; margin: auto; }
         .controls { margin-top: 15px; }
+        .features { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .feature-box { background: rgba(0, 0, 0, 0.9); padding: 20px; width: 95%; max-width: 900px; border-radius: 10px; text-align: left; }
+        .feature-title { font-size: 22px; color: #0ff; text-align: center; margin-bottom: 10px; }
         footer { background: rgba(0, 0, 0, 0.9); text-align: center; padding: 20px; font-size: 14px; }
         .cta { background: #0f0; color: black; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; }
     </style>
@@ -36,7 +47,7 @@
     <img src="quantum_computer.jpg" alt="Quantum Computer" class="main-image">
 </section>
 
-<!-- IBM Quantum Simulation Title (Moved Below Image) -->
+<!-- IBM Quantum Simulation Title (Now Below Image) -->
 <section id="quantum">
     <h2>IBM Quantum Computer Interactive Simulation</h2>
     <p>Visualize and interact with a single qubit state in real-time using a 3D Bloch Sphere.</p>
@@ -58,15 +69,27 @@
 <!-- Who We Are (Still Intact) -->
 <section id="about">
     <h2>Who We Are</h2>
-    <p>
-        AI Quantum Cipher is an elite research lab operating in stealth mode, pioneering advancements in AI, quantum architecture, EEG integration, and spatial computing.
-    </p>
-    <p>
-        Building on strategic partnerships with Google since 2008, we <strong>innovated on</strong> Google Glass (2013), consulted for Magic Leap (2018), and pushed the boundaries of spatial computing through Nreal/Xreal AR and MR technologies. Now, we drive augmented, virtual, and mixed reality into 2030 and beyond.
-    </p>
-    <p>
-        With Snap NextMind visual cortex technology and Neurosity Crown motor imagery training, we are redefining brain-machine interfaces (BMI) and brain-computer interfaces (BCI). Our work in AI-driven quantum computing, EEG-integrated spatial computing, and next-generation sensor technology is shaping the future of immersive AI experiences.
-    </p>
+    <p>AI Quantum Cipher is an elite research lab operating in stealth mode, pioneering advancements in AI, quantum architecture, EEG integration, and spatial computing.</p>
+    <p>Building on strategic partnerships with Google since 2008, we <strong>innovated on</strong> Google Glass (2013), consulted for Magic Leap (2018), and pushed the boundaries of spatial computing through Nreal/Xreal AR and MR technologies.</p>
+</section>
+
+<!-- Our Focus (Feature Boxes Restored) -->
+<section id="focus">
+    <h2>Our Focus</h2>
+    <div class="features">
+        <div class="feature-box">
+            <div class="feature-title">AI Quantum Architecture</div>
+            <p>Advancing AI-driven quantum computing with Monte Carlo methods, tree-of-thought reasoning, and next-gen communication models.</p>
+        </div>
+        <div class="feature-box">
+            <div class="feature-title">Spatial Computing</div>
+            <p>Developing immersive XR/MR experiences with FLIR, EEG, and AI integration.</p>
+        </div>
+        <div class="feature-box">
+            <div class="feature-title">AI & Robotics</div>
+            <p>Leveraging AI-driven robotics for automation, security, and next-gen applications.</p>
+        </div>
+    </div>
 </section>
 
 <!-- Contact -->
@@ -93,11 +116,9 @@
         document.getElementById(containerId).appendChild(renderer.domElement);
         controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-        // Create Bloch sphere
         sphere = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true }));
         scene.add(sphere);
 
-        // Create arrow to represent qubit state
         arrow = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 0), 1.2, 0xff0000);
         scene.add(arrow);
 
@@ -108,7 +129,6 @@
         }
         animate();
 
-        // Set initial state
         if (initialState === "random") {
             applyRandomState();
         } else {
@@ -119,40 +139,22 @@
     function applyRandomState() {
         let theta = Math.random() * Math.PI;
         let phi = Math.random() * 2 * Math.PI;
-        
         let x = Math.sin(theta) * Math.cos(phi);
         let y = Math.cos(theta);
         let z = Math.sin(theta) * Math.sin(phi);
-        
         arrow.setDirection(new THREE.Vector3(x, y, z));
     }
 
     function resetQubitToZero() {
-        arrow.setDirection(new THREE.Vector3(0, 1, 0)); // Arrow points UP for |0⟩ state
+        arrow.setDirection(new THREE.Vector3(0, 1, 0)); 
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        createBlochSphere("scene1", "random"); // Start with Random State
-    });
-
-    document.getElementById("create1").addEventListener("click", function () {
-        let state = document.getElementById("initState1").value;
-        if (state === "random") {
-            applyRandomState();
-        } else {
-            resetQubitToZero();
-        }
-    });
-
-    document.getElementById("clear1").addEventListener("click", function () {
-        resetQubitToZero();
+        createBlochSphere("scene1", "random");
     });
 
     document.getElementById('email-link').addEventListener('click', function() {
-        let user = "aiqcypher";
-        let domain = "proton.me";
-        let email = user + "@" + domain;
-        window.location.href = "mailto:" + email;
+        window.location.href = "mailto:aiqcypher@proton.me";
     });
 
 </script>
