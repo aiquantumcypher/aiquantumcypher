@@ -28,7 +28,7 @@
             background: rgba(0, 0, 0, 0.9);
         }
         nav a {
-            color: #0ff;
+            color: #33ff99; /* Clean Cyber Green */
             margin: 0 20px;
             text-decoration: none;
             font-size: 20px;
@@ -41,87 +41,15 @@
             background: rgba(0, 0, 0, 0.8);
             border-radius: 10px;
         }
-        .hero {
-            font-size: 30px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .subtext {
-            font-size: 18px;
-            opacity: 0.8;
-        }
-        .main-image {
-            width: 90%;
-            max-width: 500px;
-            height: auto;
-            margin: 20px auto;
-            display: block;
-            border-radius: 10px;
-        }
-        .carousel-container {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            position: relative;
-            max-width: 800px;
-            margin: 20px auto;
-            overflow: hidden;
-        }
-        .carousel-images {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-            width: 300%; /* Ensures all images are properly aligned */
-        }
-        .carousel-images img {
-            width: 100%;
-            max-width: 800px;
-            height: auto;
-            flex: 1 0 100%;
-            border-radius: 10px;
-        }
-        .carousel-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            font-size: 24px;
-            z-index: 10;
-        }
-        .prev { left: 10px; }
-        .next { right: 10px; }
-        .carousel-btn:hover {
-            background: rgba(255, 255, 255, 0.5);
-            color: #000;
-        }
-        .features {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-        .feature-box {
-            background: rgba(0, 0, 0, 0.9);
-            padding: 20px;
-            width: 95%;
-            max-width: 900px;
-            border-radius: 10px;
-            text-align: left;
+        h2 {
+            color: #33ff99; /* Clean Cyber Green for section titles */
+            text-shadow: 0 0 8px #33ff99;
         }
         .feature-title {
             font-size: 22px;
-            color: #0ff;
+            color: #33ff99; /* Clean Cyber Green */
             text-align: center;
             margin-bottom: 10px;
-        }
-        footer {
-            background: rgba(0, 0, 0, 0.9);
-            text-align: center;
-            padding: 20px;
-            font-size: 14px;
         }
     </style>
 </head>
@@ -139,21 +67,14 @@
     <section>
         <div class="hero">AI, Quantum Computing, and Mixed Reality / Spatial Computing Innovation</div>
         <div class="subtext">Pioneering next-generation technologies since 2008</div>
-
-        <!-- Quantum Computer Image (Separate from the carousel) -->
         <img src="quantum_computer.jpg" alt="Quantum Computer" class="main-image">
     </section>
 
-    <!-- Image Carousel in its own container -->
-    <section class="carousel-container">
-        <button class="carousel-btn prev" onclick="moveSlide(-1)">&#10094;</button>
-        <div class="carousel-images">
-            <img src="qiskit_image1.jpg" alt="Qiskit Quantum Innovation">
-            <img src="qiskit_image2.jpg" alt="Quantum Circuit Processing">
-            <img src="qiskit_image3.jpg" alt="Quantum Monte Carlo Simulations">
-        </div>
-        <button class="carousel-btn next" onclick="moveSlide(1)">&#10095;</button>
-    </section>
+    <div class="qiskit-container">
+        <h2>Quantum Random Number Generator</h2>
+        <button class="qiskit-btn" onclick="runQiskit()">Generate Quantum Random Number</button>
+        <p id="qiskit-output" class="qiskit-output"></p>
+    </div>
 
     <section id="about">
         <h2>Who We Are</h2>
@@ -201,16 +122,9 @@
     </footer>
 
     <script>
-        let currentIndex = 0;
-        function moveSlide(direction) {
-            const images = document.querySelectorAll('.carousel-images img');
-            const totalImages = images.length;
-            currentIndex += direction;
-
-            if (currentIndex < 0) currentIndex = totalImages - 1;
-            else if (currentIndex >= totalImages) currentIndex = 0;
-
-            document.querySelector('.carousel-images').style.transform = `translateX(${-currentIndex * 100}%)`;
+        function runQiskit() {
+            let result = Math.random() < 0.5 ? 0 : 1;
+            document.getElementById('qiskit-output').innerText = `Quantum Random Result: ${result}`;
         }
 
         document.getElementById('email-link').addEventListener('click', function() {
