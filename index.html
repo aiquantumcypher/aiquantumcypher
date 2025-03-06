@@ -1,370 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quantum Carousel Demo</title>
-  <!-- Three.js and OrbitControls (for 3D visualization) -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/js/controls/OrbitControls.js"></script>
-  <!-- Qiskit.js (Quantum circuit simulation) -->
-  <script src="https://unpkg.com/qiskit@0.9.0/index.js"></script>
-  <!-- Carousel styles (could also be in an external CSS file) -->
-  <style>
-    /* Carousel container and slide styling */
-    #carousel { position: relative; max-width: 800px; margin: 0 auto; }
-    .slide { display: none; text-align: center; }
-    .slide.active { display: block; }  /* Only active slide is visible */
-    .slide h3 { margin: 10px 0; }
-    /* 3D canvas container */
-    .three-container { width: 100%; height: 400px; margin: 0 auto; }
-    canvas { width: 100%; height: 100%; display: block; }
-    /* Control buttons */
-    .controls { margin: 10px 0; }
-    .controls button, .controls select {
-      padding: 5px 10px; font-size: 1rem; margin: 0 5px;
-    }
-    /* Navigation arrow buttons */
-    #prev, #next {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      background: rgba(0,0,0,0.5); color: #fff; border: none;
-      font-size: 2rem; width: 40px; height: 40px; text-align: center;
-      line-height: 40px; cursor: pointer;
-    }
-    #prev { left: 10px; }
-    #next { right: 10px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Quantum Cipher - Stealth Research Lab</title>
+    <meta name="description" content="AI Quantum Cipher - A cutting-edge research lab in stealth mode focusing on AI quantum architecture, XR, MR, EEG, and spatial computing.">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #000; color: white; text-align: center; margin: 0; padding: 0; }
+        header { background: rgba(0, 0, 0, 0.8); padding: 40px; text-align: center; font-size: 24px; font-weight: bold; line-height: 1.5; }
+        nav { text-align: center; padding: 15px; background: rgba(0, 0, 0, 0.9); }
+        nav a { color: #0ff; margin: 0 20px; text-decoration: none; font-size: 20px; }
+        .three-container { width: 100%; height: 400px; margin: auto; }
+    </style>
 </head>
 <body>
-  <div id="carousel">
-    <!-- Slide 1: Single Qubit State -->
-    <div id="slide1" class="slide active">
-      <h3>Single Qubit State</h3>
-      <div id="scene1" class="three-container"></div>
-      <div class="controls">
-        <!-- Select initial state: |0> or random -->
+
+<header>
+    <h1>AI QUANTUM CIPHER <br> Stealth Research Lab</h1>
+</header>
+
+<nav>
+    <a href="#about">About</a>
+    <a href="#focus">Our Focus</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<section>
+    <div class="hero">IBM Quantum Computer Interactive Simulation – Create & Visualize a Single Qubit</div>
+    <img src="quantum_computer.jpg" alt="Quantum Computer" class="main-image">
+</section>
+
+<section id="quantum">
+    <h2>Single Qubit State</h2>
+    <div id="scene1" class="three-container"></div>
+    <div class="controls">
         <select id="initState1">
-          <option value="zero">|0⟩ state</option>
-          <option value="random">Random state</option>
+            <option value="random" selected>Random state</option>
+            <option value="zero">|0⟩ state</option>
         </select>
         <button id="create1">Create Qubit</button>
         <button id="clear1">Clear</button>
-      </div>
     </div>
-    <!-- Slide 2: Superposition -->
-    <div id="slide2" class="slide">
-      <h3>Superposition (Hadamard)</h3>
-      <div id="scene2" class="three-container"></div>
-      <div class="controls">
-        <select id="initState2">
-          <option value="zero">|0⟩ state</option>
-          <option value="random">Random state</option>
-        </select>
-        <button id="create2">Create Qubit</button>
-        <button id="clear2">Clear</button>
-        <button id="hGate2">Apply H Gate</button>
-      </div>
-    </div>
-    <!-- Slide 3: Entanglement -->
-    <div id="slide3" class="slide">
-      <h3>Entanglement (Bell State)</h3>
-      <div id="scene3" class="three-container"></div>
-      <div class="controls">
-        <button id="create3">Create Qubits</button>
-        <button id="clear3">Clear</button>
-        <button id="entangle3">Entangle (H + CNOT)</button>
-      </div>
-    </div>
-    <!-- Carousel navigation -->
-    <button id="prev">&#9664;</button>
-    <button id="next">&#9654;</button>
-  </div>
+</section>
 
-  <!-- Carousel functionality script (can be inline or in a separate JS file) -->
-  <script>
-    // Helper: create a complex number object
-    const Complex = (re, im = 0) => ({ re, im });
-    // Helper: normalize a single-qubit state [α, β]
-    function normalizeState(state) {
-      const norm = Math.hypot(state[0].re, state[0].im, state[1].re, state[1].im);
-      if (norm === 0) return state;
-      return [ Complex(state[0].re/norm, state[0].im/norm), Complex(state[1].re/norm, state[1].im/norm) ];
-    }
-    // Compute Bloch sphere coordinates (x,y,z) from single-qubit state [α, β]
-    function stateToBloch(alpha, beta) {
-      // α and β are Complex {re, im}
-      // x = 2 * Re(α*conj(β)), y = 2 * Im(α*conj(β)), z = |α|^2 - |β|^2
-      const x = 2 * (alpha.re * beta.re + alpha.im * beta.im);
-      const y = 2 * (alpha.im * beta.re - alpha.re * beta.im);
-      const z = (alpha.re**2 + alpha.im**2) - (beta.re**2 + beta.im**2);
-      return new THREE.Vector3(x, y, z).normalize();
+<footer>
+    <p>&copy; 2025 AI Quantum Cipher. All Rights Reserved.</p>
+</footer>
+
+<script>
+    let scene, camera, renderer, sphere, arrow, controls;
+
+    function createBlochSphere(containerId, initialState = "random") {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+        camera.position.set(0, 0, 3);
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(400, 400);
+        document.getElementById(containerId).appendChild(renderer.domElement);
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        // Create Bloch sphere
+        sphere = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true }));
+        scene.add(sphere);
+
+        // Create arrow to represent qubit state
+        let arrowDir = new THREE.Vector3(0, 1, 0);  // Default: Up (|0⟩ state)
+        let arrowLength = 1.2;
+        let arrowColor = 0xff0000;
+        arrow = new THREE.ArrowHelper(arrowDir, new THREE.Vector3(0, 0, 0), arrowLength, arrowColor);
+        scene.add(arrow);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Initialize qubit in the requested state
+        if (initialState === "random") {
+            applyRandomState();
+        } else {
+            resetQubitToZero();
+        }
     }
 
-    // Three.js scenes, cameras, renderers for each slide
-    let scene1, scene2, scene3;
-    let camera1, camera2, camera3;
-    let renderer1, renderer2, renderer3;
-    let controls1, controls2, controls3;
-    // Objects for Bloch spheres and state arrows
-    let arrow1 = null, arrow2 = null, arrow3_0 = null, arrow3_1 = null;
-    // State vectors: single qubit (for slide1 & 2) and two-qubit (for slide3)
-    let state1 = [Complex(1,0), Complex(0,0)];  // initial |0> state
-    let state2 = [Complex(1,0), Complex(0,0)];
-    let state2qubit = [Complex(1,0), Complex(0,0), Complex(0,0), Complex(0,0)];  // |00>
-
-    // Initialize Three.js scenes and Bloch spheres
-    function initThreeScenes() {
-      // Common sphere geometry for Bloch sphere (radius=1)
-      const sphereGeo = new THREE.SphereGeometry(1, 32, 16);
-      const sphereMat = new THREE.MeshBasicMaterial({ color: 0x888888, wireframe: true });
-      // Slide 1 scene
-      scene1 = new THREE.Scene();
-      camera1 = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-      camera1.position.set(0, 0, 3);  // position camera to see the sphere
-      renderer1 = new THREE.WebGLRenderer({ antialias: true });
-      renderer1.setSize(document.getElementById('scene1').clientWidth, document.getElementById('scene1').clientHeight);
-      renderer1.setClearColor(0x000000);  // black background
-      document.getElementById('scene1').appendChild(renderer1.domElement);
-      controls1 = new THREE.OrbitControls(camera1, renderer1.domElement);
-      controls1.enableDamping = true;
-      // Add Bloch sphere and axes to scene1
-      const sphere1 = new THREE.Mesh(sphereGeo, sphereMat);
-      scene1.add(sphere1);
-      addAxes(scene1, new THREE.Vector3(0,0,0));
-
-      // Slide 2 scene (single qubit, same setup as slide1)
-      scene2 = new THREE.Scene();
-      camera2 = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-      camera2.position.set(0, 0, 3);
-      renderer2 = new THREE.WebGLRenderer({ antialias: true });
-      renderer2.setSize(document.getElementById('scene2').clientWidth, document.getElementById('scene2').clientHeight);
-      renderer2.setClearColor(0x000000);
-      document.getElementById('scene2').appendChild(renderer2.domElement);
-      controls2 = new THREE.OrbitControls(camera2, renderer2.domElement);
-      controls2.enableDamping = true;
-      const sphere2 = new THREE.Mesh(sphereGeo, sphereMat);
-      scene2.add(sphere2);
-      addAxes(scene2, new THREE.Vector3(0,0,0));
-
-      // Slide 3 scene (two qubits: two Bloch spheres side by side)
-      scene3 = new THREE.Scene();
-      camera3 = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-      camera3.position.set(0, 0, 5);
-      controls3 = new THREE.OrbitControls(camera3, renderer1.domElement);  // will reset after renderer3 is created
-      // Adjust after renderer3 is created (to avoid using renderer1 above by mistake)
-      renderer3 = new THREE.WebGLRenderer({ antialias: true });
-      renderer3.setSize(document.getElementById('scene3').clientWidth, document.getElementById('scene3').clientHeight);
-      renderer3.setClearColor(0x000000);
-      document.getElementById('scene3').appendChild(renderer3.domElement);
-      controls3 = new THREE.OrbitControls(camera3, renderer3.domElement);
-      controls3.enableDamping = true;
-      // Add two Bloch spheres (left and right)
-      const sphereL = new THREE.Mesh(sphereGeo, sphereMat);
-      const sphereR = new THREE.Mesh(sphereGeo, sphereMat);
-      sphereL.position.x = -2;
-      sphereR.position.x = 2;
-      scene3.add(sphereL);
-      scene3.add(sphereR);
-      // Add axes for each sphere (centered at -2 and +2 on x-axis)
-      addAxes(scene3, new THREE.Vector3(-2,0,0));
-      addAxes(scene3, new THREE.Vector3(2,0,0));
-      // Set orbit control target to origin (midpoint between spheres)
-      controls3.target.set(0, 0, 0);
-      controls3.update();
+    function applyRandomState() {
+        let theta = Math.random() * Math.PI;
+        let phi = Math.random() * 2 * Math.PI;
+        
+        // Convert spherical coordinates to Cartesian for arrow direction
+        let x = Math.sin(theta) * Math.cos(phi);
+        let y = Math.cos(theta);
+        let z = Math.sin(theta) * Math.sin(phi);
+        
+        arrow.setDirection(new THREE.Vector3(x, y, z));
     }
 
-    // Helper to add X, Y, Z axes arrows to a scene at a given origin
-    function addAxes(scene, origin) {
-      const axisLength = 1.2;  // a bit beyond sphere radius
-      const headLength = 0.2;  // length of arrowhead
-      const headWidth = 0.1;
-      // X-axis (red)
-      const xDir = new THREE.Vector3(1, 0, 0);
-      const xAxis = new THREE.ArrowHelper(xDir, origin, axisLength, 0xff0000, headLength, headWidth);
-      // Y-axis (green)
-      const yDir = new THREE.Vector3(0, 1, 0);
-      const yAxis = new THREE.ArrowHelper(yDir, origin, axisLength, 0x00ff00, headLength, headWidth);
-      // Z-axis (blue)
-      const zDir = new THREE.Vector3(0, 0, 1);
-      const zAxis = new THREE.ArrowHelper(zDir, origin, axisLength, 0x0000ff, headLength, headWidth);
-      scene.add(xAxis); scene.add(yAxis); scene.add(zAxis);
+    function resetQubitToZero() {
+        arrow.setDirection(new THREE.Vector3(0, 1, 0)); // Arrow points UP for |0⟩ state
     }
 
-    // Initialize everything
-    initThreeScenes();
+    document.addEventListener("DOMContentLoaded", function () {
+        createBlochSphere("scene1", "random");
+    });
 
-    // Carousel navigation functionality
-    const slides = document.querySelectorAll('.slide');
-    let currentSlide = 0;
-    function showSlide(index) {
-      slides.forEach((slide, i) => {
-        slide.classList.toggle('active', i === index);
-      });
-      currentSlide = index;
-    }
-    document.getElementById('prev').onclick = () => {
-      let idx = (currentSlide - 1 + slides.length) % slides.length;
-      showSlide(idx);
-    };
-    document.getElementById('next').onclick = () => {
-      let idx = (currentSlide + 1) % slides.length;
-      showSlide(idx);
-    };
+    document.getElementById("create1").addEventListener("click", function () {
+        let state = document.getElementById("initState1").value;
+        if (state === "random") {
+            applyRandomState();
+        } else {
+            resetQubitToZero();
+        }
+    });
 
-    // Quantum state management and button event handlers:
+    document.getElementById("clear1").addEventListener("click", function () {
+        resetQubitToZero();
+    });
 
-    // Slide 1: Create single qubit (|0> or random)
-    document.getElementById('create1').onclick = () => {
-      const select = document.getElementById('initState1');
-      const choice = select.value;
-      // Remove existing arrow if any
-      if (arrow1) { scene1.remove(arrow1); arrow1 = null; }
-      if (choice === 'zero') {
-        // Initialize |0> state (alpha=1, beta=0)
-        state1 = [Complex(1,0), Complex(0,0)];
-      } else if (choice === 'random') {
-        // Initialize a random state: pick random Bloch angles θ, φ
-        const phi = 2 * Math.PI * Math.random();
-        const cosTheta = 2 * Math.random() - 1;  // uniform in [-1,1]
-        const theta = Math.acos(cosTheta);
-        const alpha = Math.cos(theta/2);
-        const betaMag = Math.sin(theta/2);
-        // beta = e^{i φ} * sin(theta/2)
-        state1 = [
-          Complex(alpha, 0),
-          Complex(betaMag * Math.cos(phi), betaMag * Math.sin(phi))
-        ];
-      }
-      state1 = normalizeState(state1);
-      // Calculate Bloch vector and add arrow
-      const dir = stateToBloch(state1[0], state1[1]);
-      arrow1 = new THREE.ArrowHelper(dir, new THREE.Vector3(0,0,0), 1.1, 0xFFFF00);
-      scene1.add(arrow1);
-      // (If Qiskit.js were used: we could create QuantumCircuit(1), prepare state, etc.)
-    };
-    // Slide 1: Clear state (remove arrow)
-    document.getElementById('clear1').onclick = () => {
-      if (arrow1) { scene1.remove(arrow1); arrow1 = null; }
-      // Reset internal state to |0>
-      state1 = [Complex(1,0), Complex(0,0)];
-    };
+</script>
 
-    // Slide 2: Create single qubit (same as slide1 logic)
-    document.getElementById('create2').onclick = () => {
-      const choice = document.getElementById('initState2').value;
-      if (arrow2) { scene2.remove(arrow2); arrow2 = null; }
-      if (choice === 'zero') {
-        state2 = [Complex(1,0), Complex(0,0)];
-      } else if (choice === 'random') {
-        const phi = 2 * Math.PI * Math.random();
-        const cosTheta = 2 * Math.random() - 1;
-        const theta = Math.acos(cosTheta);
-        const alpha = Math.cos(theta/2);
-        const betaMag = Math.sin(theta/2);
-        state2 = [
-          Complex(alpha, 0),
-          Complex(betaMag * Math.cos(phi), betaMag * Math.sin(phi))
-        ];
-      }
-      state2 = normalizeState(state2);
-      const dir = stateToBloch(state2[0], state2[1]);
-      arrow2 = new THREE.ArrowHelper(dir, new THREE.Vector3(0,0,0), 1.1, 0xFFFF00);
-      scene2.add(arrow2);
-    };
-    document.getElementById('clear2').onclick = () => {
-      if (arrow2) { scene2.remove(arrow2); arrow2 = null; }
-      state2 = [Complex(1,0), Complex(0,0)];
-    };
-    // Slide 2: Apply Hadamard gate (superposition)
-    document.getElementById('hGate2').onclick = () => {
-      if (!state2) return;
-      // Use Qiskit.js to apply H if available, otherwise do it manually:
-      // (Qiskit.js example: qc.addGate('h', 0) then execute on simulator&#8203;:contentReference[oaicite:1]{index=1}&#8203;:contentReference[oaicite:2]{index=2})
-      // Manual H: new α = (α + β)/√2, new β = (α - β)/√2
-      const [α, β] = state2;
-      const newAlpha = Complex(
-        (α.re + β.re) / Math.sqrt(2),
-        (α.im + β.im) / Math.sqrt(2)
-      );
-      const newBeta = Complex(
-        (α.re - β.re) / Math.sqrt(2),
-        (α.im - β.im) / Math.sqrt(2)
-      );
-      state2 = normalizeState([newAlpha, newBeta]);
-      // Update arrow to new Bloch vector
-      if (arrow2) { scene2.remove(arrow2); arrow2 = null; }
-      const dir = stateToBloch(state2[0], state2[1]);
-      arrow2 = new THREE.ArrowHelper(dir, new THREE.Vector3(0,0,0), 1.1, 0xFFFF00);
-      scene2.add(arrow2);
-    };
-
-    // Slide 3: Create two qubits in |00> state
-    document.getElementById('create3').onclick = () => {
-      // Remove any existing arrows
-      if (arrow3_0) { scene3.remove(arrow3_0); arrow3_0 = null; }
-      if (arrow3_1) { scene3.remove(arrow3_1); arrow3_1 = null; }
-      // Initialize 2-qubit state = |00> (a=1, b=c=d=0)
-      state2qubit = [Complex(1,0), Complex(0,0), Complex(0,0), Complex(0,0)];
-      // Add Bloch arrows for each qubit (both |0> pointing +Z)
-      const dir0 = new THREE.Vector3(0, 0, 1);  // +Z axis
-      const dir1 = new THREE.Vector3(0, 0, 1);
-      arrow3_0 = new THREE.ArrowHelper(dir0, new THREE.Vector3(-2,0,0), 1.1, 0xFFFF00);
-      arrow3_1 = new THREE.ArrowHelper(dir1, new THREE.Vector3(2,0,0), 1.1, 0xFFFF00);
-      scene3.add(arrow3_0);
-      scene3.add(arrow3_1);
-    };
-    document.getElementById('clear3').onclick = () => {
-      if (arrow3_0) { scene3.remove(arrow3_0); arrow3_0 = null; }
-      if (arrow3_1) { scene3.remove(arrow3_1); arrow3_1 = null; }
-      // Reset state
-      state2qubit = [Complex(1,0), Complex(0,0), Complex(0,0), Complex(0,0)];
-    };
-    // Slide 3: Entangle (Hadamard on qubit0, then CNOT)
-    document.getElementById('entangle3').onclick = () => {
-      if (!state2qubit) return;
-      // Only proceed if state is 2-qubit (should create first)
-      // Apply Hadamard on qubit 0:
-      // (In Qiskit.js: qc.addGate('h', 0)&#8203;:contentReference[oaicite:3]{index=3})
-      const [a, b, c, d] = state2qubit;  // amplitudes for |00>,|01>,|10>,|11>
-      // New amplitudes after H on qubit0
-      const aH = Complex((a.re + c.re)/Math.sqrt(2), (a.im + c.im)/Math.sqrt(2));
-      const cH = Complex((a.re - c.re)/Math.sqrt(2), (a.im - c.im)/Math.sqrt(2));
-      const bH = Complex((b.re + d.re)/Math.sqrt(2), (b.im + d.im)/Math.sqrt(2));
-      const dH = Complex((b.re - d.re)/Math.sqrt(2), (b.im - d.im)/Math.sqrt(2));
-      // Apply CNOT (control=qubit0, target=qubit1):
-      // (In Qiskit.js: qc.addGate('cx', [0,1])&#8203;:contentReference[oaicite:4]{index=4})
-      // |10> and |11> amplitudes swap:
-      const a2 = aH, b2 = bH;
-      const c2 = dH;  // |10> gets previous |11>
-      const d2 = cH;  // |11> gets previous |10>
-      state2qubit = [a2, b2, c2, d2];
-      // After entanglement, each single qubit is in a mixed state (no definite Bloch vector)
-      // Remove individual Bloch arrows to reflect that
-      if (arrow3_0) { scene3.remove(arrow3_0); arrow3_0 = null; }
-      if (arrow3_1) { scene3.remove(arrow3_1); arrow3_1 = null; }
-      // (Optionally, one could use Qiskit's plot_bloch_multivector here to display both qubits' Bloch spheres&#8203;:contentReference[oaicite:5]{index=5})
-      // For simplicity, we indicate entanglement by no single-qubit arrow (qubits are not in a pure state individually).
-      alert("Qubits entangled! Each qubit is now in a mixed state (correlated with the other).");
-    };
-
-    // Animation loop: render only the active slide's 3D scene for efficiency
-    function animate() {
-      requestAnimationFrame(animate);
-      // Update and render only the visible slide’s scene
-      if (currentSlide === 0) {
-        controls1.update();
-        renderer1.render(scene1, camera1);
-      } else if (currentSlide === 1) {
-        controls2.update();
-        renderer2.render(scene2, camera2);
-      } else if (currentSlide === 2) {
-        controls3.update();
-        renderer3.render(scene3, camera3);
-      }
-    }
-    animate();
-  </script>
 </body>
 </html>
-
-
