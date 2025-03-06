@@ -59,11 +59,13 @@
             border-radius: 10px;
         }
         .carousel-container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
             position: relative;
             max-width: 800px;
             margin: 20px auto;
             overflow: hidden;
-            border-radius: 10px;
         }
         .carousel-images {
             display: flex;
@@ -72,6 +74,7 @@
         .carousel-images img {
             width: 100%;
             flex: 0 0 100%;
+            border-radius: 10px;
         }
         .carousel-btn {
             position: absolute;
@@ -129,23 +132,24 @@
         <a href="#focus">Our Focus</a>
         <a href="#contact">Contact</a>
     </nav>
+
     <section>
         <div class="hero">AI, Quantum Computing, and Mixed Reality / Spatial Computing Innovation</div>
         <div class="subtext">Pioneering next-generation technologies since 2008</div>
 
-        <!-- Quantum Computer Image (NOT in Carousel) -->
+        <!-- Quantum Computer Image (Separate from the carousel) -->
         <img src="quantum_computer.jpg" alt="Quantum Computer" class="main-image">
+    </section>
 
-        <!-- Image Carousel (Quantum Computer Image NOT included) -->
-        <div class="carousel-container">
-            <button class="carousel-btn prev" onclick="moveSlide(-1)">&#10094;</button>
-            <div class="carousel-images">
-                <img src="image1.jpg" alt="Quantum Innovation">
-                <img src="image2.jpg" alt="AI & Robotics">
-                <img src="image3.jpg" alt="Mixed Reality">
-            </div>
-            <button class="carousel-btn next" onclick="moveSlide(1)">&#10095;</button>
+    <!-- Image Carousel in its own container -->
+    <section class="carousel-container">
+        <button class="carousel-btn prev" onclick="moveSlide(-1)">&#10094;</button>
+        <div class="carousel-images">
+            <img src="image1.jpg" alt="Quantum Innovation">
+            <img src="image2.jpg" alt="AI & Robotics">
+            <img src="image3.jpg" alt="Mixed Reality">
         </div>
+        <button class="carousel-btn next" onclick="moveSlide(1)">&#10095;</button>
     </section>
 
     <section id="about">
@@ -165,13 +169,21 @@
                     <li>Leveraging quantum-enhanced Monte Carlo simulations for AI decision-making</li>
                 </ul>
             </div>
+            <div class="feature-box">
+                <div class="feature-title">Spatial Computing</div>
+                <ul>
+                    <li>Creating AI-driven mixed reality interfaces</li>
+                    <li>Integrating EEG for brain-controlled interactions</li>
+                </ul>
+            </div>
+            <div class="feature-box">
+                <div class="feature-title">AI & Robotics</div>
+                <ul>
+                    <li>Building autonomous AI-powered robotic systems</li>
+                    <li>Developing intelligent swarm robotics for large-scale applications</li>
+                </ul>
+            </div>
         </div>
-    </section>
-
-    <section id="quantum">
-        <h2>Quantum Random Generation</h2>
-        <button onclick="runQuantumRandom()">Generate Quantum Random Number</button>
-        <p id="quantum-output"></p>
     </section>
 
     <section id="contact">
@@ -195,11 +207,6 @@
             document.querySelector('.carousel-images').style.transform = `translateX(${-currentIndex * 100}%)`;
         }
         setInterval(() => moveSlide(1), 5000);
-
-        function runQuantumRandom() {
-            const result = Math.random() < 0.5 ? 0 : 1;
-            document.getElementById('quantum-output').innerText = `Quantum Random Result: ${result}`;
-        }
 
         document.getElementById('email-link').addEventListener('click', function() {
             let user = "info";
