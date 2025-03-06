@@ -22,13 +22,14 @@
         nav a { color: #0ff; margin: 0 20px; text-decoration: none; font-size: 20px; }
         section { max-width: 1000px; margin: 50px auto; padding: 20px; background: rgba(0, 0, 0, 0.8); border-radius: 10px; }
         .main-image { width: 80%; max-width: 600px; margin: 20px auto; display: block; border-radius: 10px; }
+        .carousel { position: relative; width: 90%; max-width: 700px; margin: auto; overflow: hidden; }
+        .carousel-inner { display: flex; transition: transform 0.5s ease-in-out; }
+        .carousel-slide { min-width: 100%; box-sizing: border-box; padding: 20px; }
+        .carousel-controls { position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; transform: translateY(-50%); }
+        .carousel-button { background: rgba(0, 0, 0, 0.7); color: #fff; border: none; padding: 10px 15px; cursor: pointer; font-size: 20px; }
         .three-container { width: 400px; height: 400px; margin: auto; }
         .controls { margin-top: 15px; }
-        .features { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-        .feature-box { background: rgba(0, 0, 0, 0.9); padding: 20px; width: 95%; max-width: 900px; border-radius: 10px; text-align: left; }
-        .feature-title { font-size: 22px; color: #0ff; text-align: center; margin-bottom: 10px; }
         footer { background: rgba(0, 0, 0, 0.9); text-align: center; padding: 20px; font-size: 14px; }
-        .cta { background: #0f0; color: black; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -47,49 +48,43 @@
     <img src="quantum_computer.jpg" alt="Quantum Computer" class="main-image">
 </section>
 
-<!-- IBM Quantum Simulation Title (Now Below Image) -->
+<!-- IBM Quantum Simulation Title -->
 <section id="quantum">
     <h2>IBM Quantum Computer Interactive Simulation</h2>
     <p>Visualize and interact with a single qubit state in real-time using a 3D Bloch Sphere.</p>
-    
-    <div style="display: flex; justify-content: center; align-items: center;">
-        <div id="scene1" class="three-container"></div>
-    </div>
 
-    <div class="controls">
-        <select id="initState1">
-            <option value="random" selected>Random state</option>
-            <option value="zero">|0⟩ state</option>
-        </select>
-        <button id="create1">Create Qubit</button>
-        <button id="clear1">Clear</button>
-    </div>
-</section>
-
-<!-- Who We Are (Still Intact) -->
-<section id="about">
-    <h2>Who We Are</h2>
-    <p>AI Quantum Cipher is an elite research lab operating in stealth mode, pioneering advancements in AI, quantum architecture, EEG integration, and spatial computing.</p>
-    <p>Building on strategic partnerships with Google since 2008, we <strong>innovated on</strong> Google Glass (2013), consulted for Magic Leap (2018), and pushed the boundaries of spatial computing through Nreal/Xreal AR and MR technologies.</p>
-</section>
-
-<!-- Our Focus (Feature Boxes Restored) -->
-<section id="focus">
-    <h2>Our Focus</h2>
-    <div class="features">
-        <div class="feature-box">
-            <div class="feature-title">AI Quantum Architecture</div>
-            <p>Advancing AI-driven quantum computing with Monte Carlo methods, tree-of-thought reasoning, and next-gen communication models.</p>
+    <!-- Carousel Start -->
+    <div class="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-slide">
+                <h3>Step 1: Create a Qubit</h3>
+                <p>Click "Create Qubit" to initialize a new qubit in |0⟩ state or a random quantum state.</p>
+                <div id="scene1" class="three-container"></div>
+                <div class="controls">
+                    <select id="initState1">
+                        <option value="random" selected>Random state</option>
+                        <option value="zero">|0⟩ state</option>
+                    </select>
+                    <button id="create1">Create Qubit</button>
+                    <button id="clear1">Clear</button>
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <h3>Step 2: Apply Clifford Circuit</h3>
+                <p>Applying Clifford gates to put the qubit in superposition.</p>
+            </div>
+            <div class="carousel-slide">
+                <h3>Step 3: Entangle Qubits</h3>
+                <p>Entangling qubits to demonstrate quantum mechanics in action.</p>
+            </div>
         </div>
-        <div class="feature-box">
-            <div class="feature-title">Spatial Computing</div>
-            <p>Developing immersive XR/MR experiences with FLIR, EEG, and AI integration.</p>
-        </div>
-        <div class="feature-box">
-            <div class="feature-title">AI & Robotics</div>
-            <p>Leveraging AI-driven robotics for automation, security, and next-gen applications.</p>
+        <div class="carousel-controls">
+            <button class="carousel-button" id="prev">&#9664;</button>
+            <button class="carousel-button" id="next">&#9654;</button>
         </div>
     </div>
+    <!-- Carousel End -->
+
 </section>
 
 <!-- Contact -->
@@ -99,12 +94,12 @@
     <p><a id="email-link" class="cta">Contact Us</a></p>
 </section>
 
-<!-- Footer (Restored) -->
 <footer>
     <p>&copy; 2025 AI Quantum Cipher. All Rights Reserved.</p>
 </footer>
 
 <script>
+    // Bloch Sphere Simulation
     let scene, camera, renderer, sphere, arrow, controls;
 
     function createBlochSphere(containerId, initialState = "random") {
@@ -122,18 +117,18 @@
         arrow = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 0), 1.2, 0xff0000);
         scene.add(arrow);
 
+        if (initialState === "random") {
+            applyRandomState();
+        } else {
+            resetQubitToZero();
+        }
+
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
             renderer.render(scene, camera);
         }
         animate();
-
-        if (initialState === "random") {
-            applyRandomState();
-        } else {
-            resetQubitToZero();
-        }
     }
 
     function applyRandomState() {
@@ -145,16 +140,24 @@
         arrow.setDirection(new THREE.Vector3(x, y, z));
     }
 
-    function resetQubitToZero() {
-        arrow.setDirection(new THREE.Vector3(0, 1, 0)); 
-    }
+    function resetQubitToZero() { arrow.setDirection(new THREE.Vector3(0, 1, 0)); }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        createBlochSphere("scene1", "random");
-    });
+    document.addEventListener("DOMContentLoaded", function () { createBlochSphere("scene1", "random"); });
 
     document.getElementById('email-link').addEventListener('click', function() {
         window.location.href = "mailto:aiqcypher@proton.me";
+    });
+
+    // Carousel Navigation
+    let index = 0;
+    const slides = document.querySelectorAll('.carousel-slide');
+    document.getElementById('prev').addEventListener('click', function() {
+        index = (index > 0) ? index - 1 : slides.length - 1;
+        document.querySelector('.carousel-inner').style.transform = `translateX(-${index * 100}%)`;
+    });
+    document.getElementById('next').addEventListener('click', function() {
+        index = (index < slides.length - 1) ? index + 1 : 0;
+        document.querySelector('.carousel-inner').style.transform = `translateX(-${index * 100}%)`;
     });
 
 </script>
