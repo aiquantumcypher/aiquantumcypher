@@ -13,7 +13,11 @@
         nav { text-align: center; padding: 15px; background: rgba(0, 0, 0, 0.9); }
         nav a { color: #0ff; margin: 0 20px; text-decoration: none; font-size: 20px; }
         section { max-width: 1000px; margin: 50px auto; padding: 20px; background: rgba(0, 0, 0, 0.8); border-radius: 10px; }
-        .three-container { width: 100%; height: 400px; margin: auto; }
+        .main-image { width: 80%; max-width: 600px; margin: 20px auto; display: block; border-radius: 10px; }
+        .three-container { width: 400px; height: 400px; margin: auto; }
+        .controls { margin-top: 15px; }
+        footer { background: rgba(0, 0, 0, 0.9); text-align: center; padding: 20px; font-size: 14px; }
+        .cta { background: #0f0; color: black; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -29,15 +33,18 @@
 </nav>
 
 <section>
-    <div class="hero">IBM Quantum Computer Interactive Simulation – Create & Visualize a Single Qubit</div>
     <img src="quantum_computer.jpg" alt="Quantum Computer" class="main-image">
 </section>
 
-<!-- Quantum Qubit Simulation - Inserted Here -->
+<!-- IBM Quantum Simulation Title (Moved Below Image) -->
 <section id="quantum">
-    <h2>Interactive Qubit Simulation</h2>
+    <h2>IBM Quantum Computer Interactive Simulation</h2>
     <p>Visualize and interact with a single qubit state in real-time using a 3D Bloch Sphere.</p>
-    <div id="scene1" class="three-container"></div>
+    
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <div id="scene1" class="three-container"></div>
+    </div>
+
     <div class="controls">
         <select id="initState1">
             <option value="random" selected>Random state</option>
@@ -48,7 +55,7 @@
     </div>
 </section>
 
-<!-- Who We Are -->
+<!-- Who We Are (Still Intact) -->
 <section id="about">
     <h2>Who We Are</h2>
     <p>
@@ -62,6 +69,14 @@
     </p>
 </section>
 
+<!-- Contact -->
+<section id="contact">
+    <h2>Join the Future</h2>
+    <p>We are looking for partners and pioneers who share our vision. Contact us for more information.</p>
+    <p><a id="email-link" class="cta">Contact Us</a></p>
+</section>
+
+<!-- Footer (Restored) -->
 <footer>
     <p>&copy; 2025 AI Quantum Cipher. All Rights Reserved.</p>
 </footer>
@@ -105,7 +120,6 @@
         let theta = Math.random() * Math.PI;
         let phi = Math.random() * 2 * Math.PI;
         
-        // Convert spherical coordinates to Cartesian for arrow direction
         let x = Math.sin(theta) * Math.cos(phi);
         let y = Math.cos(theta);
         let z = Math.sin(theta) * Math.sin(phi);
@@ -132,6 +146,13 @@
 
     document.getElementById("clear1").addEventListener("click", function () {
         resetQubitToZero();
+    });
+
+    document.getElementById('email-link').addEventListener('click', function() {
+        let user = "aiqcypher";
+        let domain = "proton.me";
+        let email = user + "@" + domain;
+        window.location.href = "mailto:" + email;
     });
 
 </script>
