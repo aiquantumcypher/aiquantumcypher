@@ -12,6 +12,7 @@
         header { background: rgba(0, 0, 0, 0.8); padding: 40px; text-align: center; font-size: 24px; font-weight: bold; line-height: 1.5; }
         nav { text-align: center; padding: 15px; background: rgba(0, 0, 0, 0.9); }
         nav a { color: #0ff; margin: 0 20px; text-decoration: none; font-size: 20px; }
+        section { max-width: 1000px; margin: 50px auto; padding: 20px; background: rgba(0, 0, 0, 0.8); border-radius: 10px; }
         .three-container { width: 100%; height: 400px; margin: auto; }
     </style>
 </head>
@@ -32,8 +33,10 @@
     <img src="quantum_computer.jpg" alt="Quantum Computer" class="main-image">
 </section>
 
+<!-- Quantum Qubit Simulation - Inserted Here -->
 <section id="quantum">
-    <h2>Single Qubit State</h2>
+    <h2>Interactive Qubit Simulation</h2>
+    <p>Visualize and interact with a single qubit state in real-time using a 3D Bloch Sphere.</p>
     <div id="scene1" class="three-container"></div>
     <div class="controls">
         <select id="initState1">
@@ -43,6 +46,20 @@
         <button id="create1">Create Qubit</button>
         <button id="clear1">Clear</button>
     </div>
+</section>
+
+<!-- Who We Are -->
+<section id="about">
+    <h2>Who We Are</h2>
+    <p>
+        AI Quantum Cipher is an elite research lab operating in stealth mode, pioneering advancements in AI, quantum architecture, EEG integration, and spatial computing.
+    </p>
+    <p>
+        Building on strategic partnerships with Google since 2008, we <strong>innovated on</strong> Google Glass (2013), consulted for Magic Leap (2018), and pushed the boundaries of spatial computing through Nreal/Xreal AR and MR technologies. Now, we drive augmented, virtual, and mixed reality into 2030 and beyond.
+    </p>
+    <p>
+        With Snap NextMind visual cortex technology and Neurosity Crown motor imagery training, we are redefining brain-machine interfaces (BMI) and brain-computer interfaces (BCI). Our work in AI-driven quantum computing, EEG-integrated spatial computing, and next-generation sensor technology is shaping the future of immersive AI experiences.
+    </p>
 </section>
 
 <footer>
@@ -66,10 +83,7 @@
         scene.add(sphere);
 
         // Create arrow to represent qubit state
-        let arrowDir = new THREE.Vector3(0, 1, 0);  // Default: Up (|0⟩ state)
-        let arrowLength = 1.2;
-        let arrowColor = 0xff0000;
-        arrow = new THREE.ArrowHelper(arrowDir, new THREE.Vector3(0, 0, 0), arrowLength, arrowColor);
+        arrow = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 0), 1.2, 0xff0000);
         scene.add(arrow);
 
         function animate() {
@@ -79,7 +93,7 @@
         }
         animate();
 
-        // Initialize qubit in the requested state
+        // Set initial state
         if (initialState === "random") {
             applyRandomState();
         } else {
@@ -104,7 +118,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        createBlochSphere("scene1", "random");
+        createBlochSphere("scene1", "random"); // Start with Random State
     });
 
     document.getElementById("create1").addEventListener("click", function () {
