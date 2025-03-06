@@ -50,38 +50,12 @@
             font-size: 18px;
             opacity: 0.8;
         }
-        .carousel-container {
-            position: relative;
+        .main-image {
+            width: 100%;
             max-width: 800px;
             margin: 20px auto;
-            overflow: hidden;
+            display: block;
             border-radius: 10px;
-        }
-        .carousel-images {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-        .carousel-images img {
-            width: 100%;
-            flex: 0 0 100%;
-        }
-        .carousel-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            font-size: 24px;
-            z-index: 10;
-        }
-        .prev { left: 10px; }
-        .next { right: 10px; }
-        .carousel-btn:hover {
-            background: rgba(255, 255, 255, 0.5);
-            color: #000;
         }
         .features {
             display: flex;
@@ -102,6 +76,12 @@
             color: #0ff;
             text-align: center;
             margin-bottom: 10px;
+        }
+        .feature-box ul {
+            padding-left: 20px;
+        }
+        .feature-box ul li {
+            margin-top: 10px;
         }
         footer {
             background: rgba(0, 0, 0, 0.9);
@@ -124,29 +104,20 @@
     <section>
         <div class="hero">AI, Quantum Computing, and Mixed Reality / Spatial Computing Innovation</div>
         <div class="subtext">Pioneering next-generation technologies since 2008</div>
-
-        <!-- Image Carousel -->
-        <div class="carousel-container">
-            <button class="carousel-btn prev" onclick="moveSlide(-1)">&#10094;</button>
-            <div class="carousel-images">
-                <img src="quantum_computer.jpg" alt="Quantum Computer">
-                <img src="ai_brain_interface.jpg" alt="AI Brain Interface">
-                <img src="spatial_computing.jpg" alt="Spatial Computing">
-            </div>
-            <button class="carousel-btn next" onclick="moveSlide(1)">&#10095;</button>
-        </div>
+        <img src="quantum_computer.jpg" alt="Quantum Computer" class="main-image">
     </section>
-
     <section id="about">
         <h2>Who We Are</h2>
         <p>
             AI Quantum Cipher is an elite research lab operating in stealth mode, pioneering advancements in AI, quantum architecture, EEG integration, and spatial computing.
         </p>
         <p>
-            We are advancing **AI and Quantum Computing**, leveraging **Clifford circuits, superposition, and post-quantum encryption algorithms** to establish new paradigms in quantum security.
+            We are exploring new frontiers in **AI and Quantum Computing**, advancing beyond classical computation through **Clifford circuits, superposition, and quantum entanglement**. Our research in **post-quantum encryption algorithms** and **novel paradigms in quantum security** aims to redefine digital infrastructure in the era of quantum supremacy.
+        </p>
+        <p>
+            Building on strategic partnerships with Google since 2008, we <strong>innovated on</strong> Google Glass (2013), consulted for Magic Leap (2018), and pushed the boundaries of spatial computing through Nreal/Xreal AR and MR technologies. Now, we drive augmented, virtual, and mixed reality into 2030 and beyond.
         </p>
     </section>
-
     <section id="focus">
         <h2>Our Focus</h2>
         <div class="features">
@@ -155,8 +126,11 @@
                 <p>Advancing AI-driven quantum computing with Monte Carlo methods, tree-of-thought reasoning, and next-gen communication models.</p>
                 <ul>
                     <li>Exploring hybrid AI-quantum architectures for computational intelligence</li>
+                    <li>Leveraging quantum-enhanced Monte Carlo simulations for AI decision-making</li>
+                    <li>Developing scalable quantum AI frameworks for complex problem-solving</li>
+                    <li>Utilizing Clifford circuits and superposition for next-gen computations</li>
                     <li>Developing post-quantum encryption algorithms for cybersecurity</li>
-                    <li>Utilizing Clifford circuits and superposition for quantum problem-solving</li>
+                    <li>Defining new paradigms in quantum security and information theory</li>
                     <li>Key SDKs: Qiskit, D-Wave, Google Cirq, Microsoft Q#, Rigetti PyQuil, IonQ</li>     
                 </ul>
             </div>
@@ -166,6 +140,8 @@
                 <ul>
                     <li>Creating AI-driven mixed reality interfaces</li>
                     <li>Integrating EEG for brain-controlled interactions</li>
+                    <li>Enhancing spatial computing with real-time sensor fusion</li>
+                    <li>Technologies: Google Glass, Meta Quest 3, Magic Leap, Vuzix, Xreal/Nreal AR Mixed Reality Spatial Computing glasses, FLIR thermal imaging</li>
                 </ul>
             </div>
             <div class="feature-box">
@@ -174,11 +150,12 @@
                 <ul>
                     <li>Building autonomous AI-powered robotic systems</li>
                     <li>Developing intelligent swarm robotics for large-scale applications</li>
+                    <li>Enhancing robotics with edge AI and real-time decision-making</li>
+                    <li>AI Tools: TensorFlow, PyTorch, Hugging Face, OpenAI GPT, Meta Llama 3.3</li>
                 </ul>
             </div>
         </div>
     </section>
-
     <section id="contact">
         <h2>Join the Future</h2>
         <p>We are looking for partners and pioneers who share our vision. Contact us for more information.</p>
@@ -191,15 +168,12 @@
     </footer>
 
     <script>
-        let currentIndex = 0;
-        function moveSlide(direction) {
-            const images = document.querySelectorAll('.carousel-images img');
-            currentIndex += direction;
-            if (currentIndex < 0) currentIndex = images.length - 1;
-            else if (currentIndex >= images.length) currentIndex = 0;
-            document.querySelector('.carousel-images').style.transform = `translateX(${-currentIndex * 100}%)`;
-        }
-        setInterval(() => moveSlide(1), 5000);
+        document.getElementById('email-link').addEventListener('click', function() {
+            let user = "aiqcypher";
+            let domain = "proton.me";
+            let email = user + "@" + domain;
+            window.location.href = "mailto:" + email;
+        });
     </script>
 </body>
 </html>
