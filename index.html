@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Quantum Cipher | Stealth Research Lab</title>
-    <meta name="description" content="AI Quantum Cipher - A cutting-edge research lab in stealth mode focusing on AI quantum architecture, XR, MR, EEG, and spatial computing.">
+    <title>AI Quantum Cipher | Quantum Qubit Generator</title>
+    <meta name="description" content="AI Quantum Cipher - Quantum Qubit Generator with Qiskit.">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@qiskit/visualization"></script>
@@ -37,18 +37,6 @@
             color: #33ff99;
             text-shadow: 0 0 8px #33ff99;
         }
-        .feature-title {
-            color: #33ff99;
-            font-size: 22px;
-            font-weight: bold;
-        }
-        .feature-box {
-            background: rgba(0, 0, 0, 0.9);
-            padding: 20px;
-            margin: 15px;
-            border-radius: 10px;
-            text-align: left;
-        }
         .carousel-inner {
             background: rgba(0, 0, 0, 0.9);
             padding: 20px;
@@ -65,7 +53,7 @@
             border-radius: 5px;
             transition: 0.3s;
             box-shadow: 0 0 10px #33ff99;
-            margin: 5px;
+            margin: 10px;
         }
         .qiskit-btn:hover {
             background-color: #00cc44;
@@ -87,29 +75,15 @@
         Stealth Research Lab
     </header>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Quantum Site</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#who-we-are">Who We Are</a></li>
-                <li class="nav-item"><a class="nav-link" href="#focus">Our Focus</a></li>
-                <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
-
     <section id="quantum-computer" class="text-center">
         <img src="quantum_computer.jpg" alt="Quantum Computer" class="img-fluid" style="max-width: 80%; height: auto; border-radius: 10px;">
     </section>
 
+    <!-- Quantum Qubit Generator Carousel -->
     <section id="qiskit-carousel-section" class="py-5">
         <div class="container">
             <h2 class="text-center">Quantum Qubit Generator</h2>
-            <div id="qiskitCarousel" class="carousel slide" data-ride="carousel">
+            <div id="qiskitCarousel" class="carousel slide" data-interval="false">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <pre style="white-space: pre-wrap;">
@@ -149,14 +123,18 @@ c_0: 0 ══╡ M ╞══════
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 </a>
             </div>
-            <div class="text-center mt-4">
-                <button class="qiskit-btn" onclick="generateQuantumQubit()">Random</button>
-                <button class="qiskit-btn" onclick="setQubitState('|0⟩')">|0⟩</button>
-                <button class="qiskit-btn" onclick="setQubitState('|1⟩')">|1⟩</button>
-            </div>
         </div>
     </section>
 
+    <!-- Qubit Generator Buttons (Outside Carousel) -->
+    <section>
+        <h3>Generate a Quantum Qubit</h3>
+        <button class="qiskit-btn" onclick="generateQuantumQubit()">Random</button>
+        <button class="qiskit-btn" onclick="setQubitState('|0⟩')">|0⟩</button>
+        <button class="qiskit-btn" onclick="setQubitState('|1⟩')">|1⟩</button>
+    </section>
+
+    <!-- Who We Are -->
     <section id="who-we-are">
         <h2>Who We Are</h2>
         <p>AI Quantum Cipher is an elite research lab operating in stealth mode...</p>
