@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IBM Quantum Computer Simulation with Clifford Circuits, Superposition, and Entanglement.</title>
+    <title>IBM Quantum Computer Simulation with Clifford Circuits, Superposition, and Entanglement</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <style>
         body {
@@ -87,7 +87,7 @@
             font-size: 16px;
             line-height: 1.5;
         }
-        #circuitDiagram, #colorfulDiagrams {
+        #circuitDiagram {
             margin: 20px auto;
             width: 400px;
             text-align: left;
@@ -104,7 +104,7 @@
     </style>
 </head>
 <body>
-    <h1>IBM Quantum Computer Simulation with Clifford Circuits, Superposition, and Entanglement.</h1>
+    <h1>IBM Quantum Computer Simulation with Clifford Circuits, Superposition, and Entanglement</h1>
     <div class="carousel-container">
         <div class="carousel">
             <div class="carousel-item">
@@ -121,7 +121,6 @@
                     <button onclick="clearQubit()">Clear</button>
                 </div>
                 <div id="circuitDiagram"></div>
-                <div id="colorfulDiagrams"></div>
             </div>
             <div class="carousel-item">
                 <p class="theory-text">Quantum Computing Theory: Clifford circuits use gates like H and CNOT. |0⟩ points up, |1⟩ points down. Superposition and entanglement unlock quantum magic!</p>
@@ -173,7 +172,6 @@
             arrow.rotation.set(0, 0, 0); // Start pointing up (|0⟩)
 
             animate();
-            initDiagrams();
             updateCircuitDiagram("zero"); // Initial circuit
         }
 
@@ -269,24 +267,7 @@
             svg.appendChild(descText);
         }
 
-        function initDiagrams() {
-            const diagrams = document.getElementById('colorfulDiagrams');
-            diagrams.innerHTML = `
-                <svg width="400" height="100">
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="#ff0" stroke-width="2"/>
-                    <line x1="50" y1="50" x2="50" y2="10" stroke="#f00" stroke-width="2"/>
-                    <text x="20" y="95" font-size="12" fill="#ff0">|0⟩</text>
-                    <circle cx="150" cy="50" r="40" fill="none" stroke="#0ff" stroke-width="2"/>
-                    <line x1="150" y1="50" x2="190" y2="50" stroke="#00f" stroke-width="2"/>
-                    <text x="120" y="95" font-size="12" fill="#0ff">|+⟩</text>
-                    <circle cx="250" cy="50" r="40" fill="none" stroke="#f0f" stroke-width="2"/>
-                    <line x1="250" y1="50" x2="210" y2="90" stroke="#f0f" stroke-width="2"/>
-                    <text x="220" y="95" font-size="12" fill="#f0f">Random</text>
-                </svg>
-            `;
-        }
-
         initQubit();
     </script>
 </body>
-<
+</html>
