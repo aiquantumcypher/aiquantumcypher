@@ -15,6 +15,8 @@
             text-align: center;
         }
         canvas {
+            width: 400px !important;
+            height: 400px !important;
             display: block;
             margin: 20px auto;
         }
@@ -35,6 +37,7 @@
 </head>
 <body>
     <h1>Quantum State Simulator</h1>
+    <div id="canvasContainer"></div>
     <button onclick="createRandomQuantumState()">Create Random Quantum State</button>
     <button onclick="resetState()">Reset</button>
 
@@ -46,12 +49,12 @@
 
         function init() {
             renderer.setSize(400, 400);
-            document.body.appendChild(renderer.domElement);
+            document.getElementById('canvasContainer').appendChild(renderer.domElement);
 
             // Bloch sphere
             const sphere = new THREE.Mesh(
                 new THREE.SphereGeometry(1, 32, 32),
-                new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, opacity: 0.7, transparent: true })
+                new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true })
             );
             scene.add(sphere);
 
@@ -101,112 +104,7 @@
             arrow.lookAt(0, 1, 0);
         }
 
-        init();
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum State Simulator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
-    <style>
-        body {
-            margin: 0;
-            background: #000;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        canvas {
-            display: block;
-            margin: 20px auto;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 5px;
-            background: #333;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background: #555;
-        }
-    </style>
-</head>
-<body>
-    <h1>Quantum State Simulator</h1>
-    <button onclick="createRandomQuantumState()">Create Random Quantum State</button>
-    <button onclick="resetState()">Reset</button>
-
-    <script>
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        let arrow;
-
-        function init() {
-            renderer.setSize(400, 400);
-            document.body.appendChild(renderer.domElement);
-
-            // Bloch sphere
-            const sphere = new THREE.Mesh(
-                new THREE.SphereGeometry(1, 32, 32),
-                new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, opacity: 0.7, transparent: true })
-            );
-            scene.add(sphere);
-
-            // Arrow
-            arrow = new THREE.Group();
-            const shaft = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.02, 0.02, 1, 12),
-                new THREE.MeshBasicMaterial({ color: 0xff0000 })
-            );
-            shaft.position.y = 0.5;
-            const head = new THREE.Mesh(
-                new THREE.ConeGeometry(0.08, 0.2, 32),
-                new THREE.MeshBasicMaterial({ color: 0xff0000 })
-            );
-            head.position.y = 1;
-            arrow.add(shaft, head);
-            scene.add(arrow);
-
-            // Camera and controls
-            camera.position.z = 3;
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableZoom = true;
-
-            // Initial state
-            arrow.lookAt(0, 1, 0);
-
-            animate();
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-        }
-
-        function createRandomQuantumState() {
-            const theta = Math.random() * Math.PI;
-            const phi = Math.random() * 2 * Math.PI;
-            const x = Math.sin(theta) * Math.cos(phi);
-            const y = Math.cos(theta);
-            const z = Math.sin(theta) * Math.sin(phi);
-            arrow.rotation.set(0, 0, 0);
-            arrow.lookAt(x, y, z);
-        }
-
-        function resetState() {
-            arrow.rotation.set(0, 0, 0);
-            arrow.lookAt(0, 1, 0);
-        }
-
+        // Start it up
         init();
     </script>
 </body>
