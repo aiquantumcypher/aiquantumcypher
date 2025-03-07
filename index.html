@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IBM Quantum Computer Simulation</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -96,24 +97,30 @@
             carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
         }
 
-        let scene, camera, renderer, qubitSphere, arrow;
+        let scene, camera, renderer, qubitSphere, arrow, controls;
         function initQubit() {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer();
+            renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(400, 400);
             document.getElementById('qubitCanvas').appendChild(renderer.domElement);
             
             let geometry = new THREE.SphereGeometry(1, 32, 32);
-            let material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+            let material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
             qubitSphere = new THREE.Mesh(geometry, material);
             scene.add(qubitSphere);
             
-            let arrowGeometry = new THREE.ConeGeometry(0.2, 0.5, 32);
+            let arrowGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1, 12);
             let arrowMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
             arrow = new THREE.Mesh(arrowGeometry, arrowMaterial);
-            arrow.position.y = 1.2;
+            arrow.position.y = 0.5;
+            let arrowHeadGeometry = new THREE.ConeGeometry(0.2, 0.5, 32);
+            let arrowHead = new THREE.Mesh(arrowHeadGeometry, arrowMaterial);
+            arrowHead.position.y = 1;
+            arrow.add(arrowHead);
             scene.add(arrow);
+            
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
             
             camera.position.z = 3;
             animate();
@@ -127,18 +134,18 @@
         function createQubit() {
             let qubitType = document.getElementById('qubitType').value;
             if (qubitType === "random") {
-                let angle = Math.random() * Math.PI * 2;
-                arrow.position.x = Math.sin(angle);
-                arrow.position.y = Math.cos(angle);
+                let theta = Math.random() * Math.PI;
+                let phi = Math.random() * 2 * Math.PI;
+                arrow.position.x = Math.sin(theta) * Math.cos(phi);
+                arrow.position.y = Math.cos(theta);
+                arrow.position.z = Math.sin(theta) * Math.sin(phi);
             } else {
-                arrow.position.x = 0;
-                arrow.position.y = 1.2;
+                arrow.position.set(0, 1, 0);
             }
         }
 
         function clearQubit() {
-            arrow.position.x = 0;
-            arrow.position.y = 1.2;
+            arrow.position.set(0, 1, 0);
         }
 
         initQubit();
