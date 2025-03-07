@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IBM Quantum Computer Simulation with Clifford Circuits, Superposition, and Entanglement.</title>
+    <title>IBM Quantum Computer Simulation with Clifford Circuits, Superposition, and Entanglement</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <style>
         body {
@@ -104,7 +104,7 @@
     </style>
 </head>
 <body>
-    <h1>IBM Quantum Computer Simulation with Clifford Circuits, Superposition, and Entanglement.</h1>
+    <h1>IBM Quantum Computer Simulation with Clifford Circuits, Superposition, and Entanglement</h1>
     <div class="carousel-container">
         <div class="carousel">
             <div class="carousel-item">
@@ -170,7 +170,7 @@
             scene.add(arrow);
 
             camera.position.z = 3;
-            arrow.rotation.set(0, 0, 0); // Start pointing up (|0⟩)
+            arrow.lookAt(0, 1, 0); // Start pointing up (|0⟩)
 
             animate();
             initDiagrams();
@@ -184,37 +184,44 @@
 
         function updateQubitState() {
             const qubitType = document.getElementById('qubitType').value;
-            arrow.rotation.set(0, 0, 0);
-            updateCircuitDiagram(qubitType);
+            arrow.rotation.set(0, 0, 0); // Reset rotation to default (pointing up)
 
             if (qubitType === "random") {
-                const theta = Math.random() * Math.PI;
-                const phi = Math.random() * 2 * Math.PI;
+                const theta = Math.random() * Math.PI; // [0, π] for full sphere
+                const phi = Math.random() * 2 * Math.PI; // [0, 2π]
                 const x = Math.sin(theta) * Math.cos(phi);
                 const y = Math.cos(theta);
                 const z = Math.sin(theta) * Math.sin(phi);
                 arrow.lookAt(x, y, z);
+                console.log("Random state:", { x, y, z });
             } else if (qubitType === "zero") {
-                arrow.rotation.set(0, 0, 0); // Up
+                arrow.lookAt(0, 1, 0); // |0⟩, north pole
+                console.log("|0⟩ direction: (0, 1, 0)");
             } else if (qubitType === "one") {
-                arrow.rotation.set(Math.PI, 0, 0); // Down
+                arrow.lookAt(0, -1, 0); // |1⟩, south pole
+                console.log("|1⟩ direction: (0, -1, 0)");
             }
+            updateCircuitDiagram(qubitType);
         }
 
         function setSuperposition() {
             arrow.rotation.set(0, 0, 0);
             arrow.lookAt(1, 0, 0); // |+⟩ state (Hadamard)
+            console.log("Superposition |+⟩ direction: (1, 0, 0)");
             updateCircuitDiagram("superposition");
         }
 
         function setEntanglement() {
             arrow.rotation.set(0, 0, 0);
             arrow.lookAt(1, 1, 0); // Simplified entangled state visualization
+            console.log("Entanglement direction: (1, 1, 0)");
             updateCircuitDiagram("entanglement");
         }
 
         function clearQubit() {
-            arrow.rotation.set(0, 0, 0); // Reset to |0⟩ (up)
+            arrow.rotation.set(0, 0, 0);
+            arrow.lookAt(0, 1, 0); // Reset to |0⟩ (up)
+            console.log("Cleared to |0⟩ direction: (0, 1, 0)");
             updateCircuitDiagram("zero");
         }
 
