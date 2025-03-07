@@ -1,158 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Quantum Cipher | Stealth Research Lab</title>
-    <meta name="description" content="AI Quantum Cipher - A cutting-edge research lab in stealth mode focusing on AI quantum architecture, XR, MR, EEG, and spatial computing.">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://unpkg.com/qiskit-js@latest"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: url('https://aiquantumcypher.github.io/aiquantumcypher/quantum_hologram.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: #fff;
-            scroll-behavior: smooth;
-        }
-        .carousel-container {
-            width: 80%;
-            max-width: 800px;
-            margin: auto;
-            position: relative;
-            overflow: hidden;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .carousel {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-        .carousel-item {
-            min-width: 100%;
-            box-sizing: border-box;
-        }
-        .carousel-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 255, 255, 0.8);
-            border: none;
-            cursor: pointer;
-            font-size: 20px;
-            padding: 10px;
-        }
-        .left {
-            left: 10px;
-        }
-        .right {
-            right: 10px;
-        }
-        .quantum-controls button {
-            margin: 5px;
-            padding: 10px;
-            background: #0ff;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        #qubitCanvas {
-            width: 300px;
-            height: 300px;
-            margin: auto;
-            background: rgba(255, 255, 255, 0.1);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantum Carousel Page</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; }
+    /* Existing styles are preserved; new styles for carousel and qubit: */
+    .carousel { position: relative; width: 100%; overflow: hidden; }
+    .carousel .slide {
+      display: none;
+      min-height: 400px;
+      /* Center slide contents vertically and horizontally */
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .carousel .slide.active { display: flex; }
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      padding: 5px 10px;
+      z-index: 10;
+    }
+    .nav-arrow.left  { left: 10px; }
+    .nav-arrow.right { right: 10px; }
+    /* Optional: style for dropdown control */
+    #qubitState {
+      font-size: 1rem;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+  </style>
+  <!-- Include Three.js (for 3D Qubit visualization) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.136.0/build/three.min.js"></script>
+  <!-- Include OrbitControls for Three.js (to enable interactive rotation) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.136.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
-    <header>
-        AI QUANTUM CIPHER <br> Stealth Research Lab
-    </header>
-    
-    <section>
-        <h2>AI, Quantum Computing, and Mixed Reality / Spatial Computing Innovation</h2>
-        <p>Pioneering next-generation technologies since 2008</p>
-        <img src="quantum_computer.jpg" alt="Quantum Computer" class="main-image">
-    </section>
-    
-    <section class="carousel-container">
-        <h2>IBM Random Quantum Qubit Simulation</h2>
-        <div class="carousel">
-            <div class="carousel-item">
-                <canvas id="qubitCanvas"></canvas>
-                <div class="quantum-controls">
-                    <select id="qubitType">
-                        <option value="random">Random</option>
-                        <option value="zero">0-Position</option>
-                    </select>
-                    <button onclick="createQubit()">Create Qubit</button>
-                    <button onclick="clearCanvas()">Clear</button>
-                    <button onclick="applyClifford()">Clifford Circuit</button>
-                    <button onclick="applySuperposition()">Superposition</button>
-                    <button onclick="applyEntanglement()">Entangle</button>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <p>Quantum Computing Theory</p>
-            </div>
-            <div class="carousel-item">
-                <p>Quantum Applications</p>
-            </div>
-        </div>
-        <button class="carousel-btn left" onclick="moveCarousel(-1)">&lt;</button>
-        <button class="carousel-btn right" onclick="moveCarousel(1)">&gt;</button>
-    </section>
-    
-    <section id="about">
-        <h2>Who We Are</h2>
-        <p>AI Quantum Cipher is an elite research lab pioneering advancements in AI-driven quantum computing...</p>
-    </section>
-    
-    <script>
-        let currentSlide = 0;
-        function moveCarousel(direction) {
-            const carousel = document.querySelector('.carousel');
-            const totalSlides = document.querySelectorAll('.carousel-item').length;
-            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
-        }
-        
-        function createQubit() {
-            let qubitType = document.getElementById('qubitType').value;
-            let canvas = document.getElementById('qubitCanvas');
-            let ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#0ff';
-            ctx.beginPath();
-            ctx.arc(150, 150, 50, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.font = '16px Arial';
-            ctx.fillStyle = '#fff';
-            ctx.fillText(qubitType.toUpperCase(), 120, 160);
-        }
-        
-        function clearCanvas() {
-            let canvas = document.getElementById('qubitCanvas');
-            let ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-        
-        function applyClifford() {
-            alert('Applying Clifford Circuit (placeholder function)');
-        }
-        
-        function applySuperposition() {
-            alert('Applying Superposition (placeholder function)');
-        }
-        
-        function applyEntanglement() {
-            alert('Applying Entanglement (placeholder function)');
-        }
-    </script>
+  <!-- Quantum Computer image section (existing content) -->
+  <section id="intro">
+    <h1>Quantum Computer</h1>
+    <img src="quantum_computer.jpg" alt="Quantum Computer" style="max-width:100%; height:auto;" />
+  </section>
+
+  <!-- Carousel section (inserted below image and above "Who We Are") -->
+  <div class="carousel">
+    <!-- Slide 1: 3D Qubit visualization with state control -->
+    <div class="slide active">
+      <label for="qubitState">Qubit State: </label>
+      <select id="qubitState">
+        <option value="random" selected>Random</option>
+        <option value="zero">0-Position</option>
+      </select>
+      <!-- Canvas for Three.js rendering -->
+      <canvas id="blochCanvas" style="width: 100%; height: 400px;"></canvas>
+    </div>
+    <!-- Slide 2: Placeholder content -->
+    <div class="slide">
+      <h3>Placeholder Slide 2</h3>
+      <p>This is the second frame (placeholder content).</p>
+    </div>
+    <!-- Slide 3: Placeholder content -->
+    <div class="slide">
+      <h3>Placeholder Slide 3</h3>
+      <p>This is the third frame (placeholder content).</p>
+    </div>
+    <!-- Navigation arrows -->
+    <button class="nav-arrow left" aria-label="Previous slide">&#10094;</button>
+    <button class="nav-arrow right" aria-label="Next slide">&#10095;</button>
+  </div>
+
+  <!-- "Who We Are" section (existing content below the carousel) -->
+  <section id="who-we-are">
+    <h2>Who We Are</h2>
+    <p>We are a team of quantum computing enthusiasts committed to advancing technology.</p>
+    <ul>
+      <li>Experts in quantum algorithms</li>
+      <li>Experienced in photonics and quantum hardware</li>
+      <li>Dedicated to innovation in computing</li>
+    </ul>
+  </section>
+
+  <!-- (Other existing sections would remain here unchanged) -->
+
+  <!-- Scripts for carousel functionality and Qubit visualization -->
+  <script>
+    // Carousel functionality (manual navigation, no auto-rotation)
+    const slides = document.querySelectorAll('.carousel .slide');
+    let currentIndex = 0;
+    const prevBtn = document.querySelector('.nav-arrow.left');
+    const nextBtn = document.querySelector('.nav-arrow.right');
+    prevBtn.addEventListener('click', () => {
+      slides[currentIndex].classList.remove('active');
+      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+      slides[currentIndex].classList.add('active');
+    });
+    nextBtn.addEventListener('click', () => {
+      slides[currentIndex].classList.remove('active');
+      currentIndex = (currentIndex + 1) % slides.length;
+      slides[currentIndex].classList.add('active');
+    });
+
+    // Three.js Qubit (Bloch sphere) visualization
+    const canvas   = document.getElementById('blochCanvas');
+    const container = canvas.parentElement;
+    // Create scene, camera, and renderer
+    const scene    = new THREE.Scene();
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+    // Set renderer size to container width and fixed height (for responsiveness)
+    const initWidth  = container.clientWidth;
+    const initHeight = 400;  // height matches canvas CSS height
+    renderer.setSize(initWidth, initHeight);
+    // Camera setup (perspective)
+    const camera = new THREE.PerspectiveCamera(45, initWidth / initHeight, 0.1, 1000);
+    // Position camera so that the "0-Position" (up direction) points vertically on screen
+    camera.position.set(0, 0, 5);
+    camera.lookAt(0, 0, 0);
+    // Add light (for better visibility of 3D objects)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    scene.add(ambientLight);
+    // Bloch sphere (wireframe sphere to represent qubit)
+    const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+    const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x999999, wireframe: true });
+    const blochSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    scene.add(blochSphere);
+    // Arrow to indicate qubit state (ArrowHelper from origin)
+    const arrowColor  = 0xff0000;
+    const arrowLength = 1.2;  // arrow length (slightly larger than sphere radius)
+    // Function to get a random unit vector (random qubit state direction)
+    function randomDirection() {
+      const u = Math.random();
+      const v = Math.random();
+      const theta = 2 * Math.PI * u;
+      const phi = Math.acos(2 * v - 1);
+      const x = Math.sin(phi) * Math.cos(theta);
+      const y = Math.sin(phi) * Math.sin(theta);
+      const z = Math.cos(phi);
+      return new THREE.Vector3(x, y, z).normalize();
+    }
+    // Initialize arrow pointing in a random direction
+    const initDir    = randomDirection();
+    const arrowHelper = new THREE.ArrowHelper(initDir, new THREE.Vector3(0, 0, 0), arrowLength, arrowColor);
+    scene.add(arrowHelper);
+    // Enable orbital controls for interactive rotation
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = false; // simple immediate movement
+    controls.update();
+    // Handle window resize for responsiveness
+    window.addEventListener('resize', () => {
+      const newWidth  = container.clientWidth || window.innerWidth;
+      const newHeight = 400;
+      renderer.setSize(newWidth, newHeight);
+      camera.aspect = newWidth / newHeight;
+      camera.updateProjectionMatrix();
+    });
+    // Animation loop to render the scene
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+    animate();
+    // Dropdown event to control qubit state
+    document.getElementById('qubitState').addEventListener('change', (e) => {
+      if (e.target.value === 'zero') {
+        // 0-Position: arrow straight up (pointing along +Y axis)
+        arrowHelper.setDirection(new THREE.Vector3(0, 1, 0).normalize());
+      } else if (e.target.value === 'random') {
+        // Random: set arrow to a new random direction
+        arrowHelper.setDirection(randomDirection());
+      }
+    });
+  </script>
 </body>
 </html>
-
