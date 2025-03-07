@@ -18,17 +18,58 @@
             font-size: 2em;
             margin: 20px 0;
         }
+        .carousel-container {
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-item {
+            min-width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #00ffff;
+            color: #000;
+            border: none;
+            padding: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            opacity: 0.8;
+        }
+        .carousel-btn:hover {
+            opacity: 1;
+        }
+        .left { left: 10px; }
+        .right { right: 10px; }
         #qubitCanvas {
             width: 400px;
             height: 400px;
-            margin: 20px auto;
+            margin: 0 auto;
             border: 1px solid #fff;
         }
         .controls {
+            margin-top: 15px;
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
             gap: 10px;
-            margin: 15px 0;
         }
         select, button {
             padding: 10px;
@@ -42,41 +83,78 @@
         select:hover, button:hover {
             background: #555;
         }
+        .theory-text {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        #circuitDiagram, #colorfulDiagrams {
+            margin: 20px auto;
+            width: 400px;
+            text-align: left;
+        }
+        svg {
+            background: #fff;
+            border-radius: 5px;
+        }
+        .description {
+            font-size: 14px;
+            color: #0ff;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <h1>IBM Quantum Computer Simulation with Clifford Circuits, Superposition, and Entanglement</h1>
-    <div id="qubitCanvas"></div>
-    <div class="controls">
-        <select id="qubitType">
-            <option value="random">Random</option>
-            <option value="zero">|0⟩</option>
-            <option value="one">|1⟩</option>
-        </select>
-        <button onclick="updateQubitState()">Update Qubit State</button>
-        <button onclick="clearQubit()">Clear</button>
+    <div class="carousel-container">
+        <div class="carousel">
+            <div class="carousel-item">
+                <div id="qubitCanvas"></div>
+                <div class="controls">
+                    <select id="qubitType">
+                        <option value="random">Random</option>
+                        <option value="zero">|0⟩</option>
+                        <option value="one">|1⟩</option>
+                    </select>
+                    <button onclick="updateQubitState()">Update Qubit State</button>
+                    <button onclick="setSuperposition()">Superposition</button>
+                    <button onclick="setEntanglement()">Entanglement</button>
+                    <button onclick="clearQubit()">Clear</button>
+                </div>
+                <div id="circuitDiagram"></div>
+                <div id="colorfulDiagrams"></div>
+            </div>
+            <div class="carousel-item">
+                <p class="theory-text">Quantum Computing Theory: Clifford circuits use gates like H and CNOT. |0⟩ points up, |1⟩ points down. Superposition and entanglement unlock quantum magic!</p>
+            </div>
+        </div>
+        <button class="carousel-btn left" onclick="moveCarousel(-1)"><</button>
+        <button class="carousel-btn right" onclick="moveCarousel(1)">></button>
     </div>
 
     <script>
-        // Core variables
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        let qubitSphere, arrow;
+        let currentSlide = 0;
+        const totalSlides = 2;
 
-        function init() {
-            // Set up renderer
+        function moveCarousel(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            document.querySelector('.carousel').style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        let scene, camera, renderer, qubitSphere, arrow;
+
+        function initQubit() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(400, 400);
             document.getElementById('qubitCanvas').appendChild(renderer.domElement);
 
-            // Add Bloch sphere
             qubitSphere = new THREE.Mesh(
                 new THREE.SphereGeometry(1, 32, 32),
                 new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true })
             );
             scene.add(qubitSphere);
 
-            // Add arrow
             arrow = new THREE.Group();
             const shaft = new THREE.Mesh(
                 new THREE.CylinderGeometry(0.02, 0.02, 1, 12),
@@ -91,71 +169,8 @@
             arrow.add(shaft, head);
             scene.add(arrow);
 
-            // Position camera and set initial state
             camera.position.z = 3;
-            arrow.lookAt(0, 1, 0); // Start at |0⟩ (top)
+            arrow.rotation.set(0, 0, 0); // Start pointing up (|0⟩)
 
-            // Start animation loop
             animate();
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-        }
-
-        function animateArrow(targetX, targetY, targetZ) {
-            let step = 0;
-            const steps = 60;
-            const forwardZ = 1;
-            const backZ = -1;
-
-            function step() {
-                step++;
-                if (step <= steps / 3) {
-                    arrow.position.z = (step / (steps / 3)) * forwardZ;
-                } else if (step <= (2 * steps) / 3) {
-                    arrow.position.z = forwardZ - ((step - steps / 3) / (steps / 3)) * (forwardZ - backZ);
-                } else {
-                    arrow.position.z = 0;
-                    arrow.lookAt(targetX, targetY, targetZ);
-                    return;
-                }
-                if (step < steps) {
-                    requestAnimationFrame(step);
-                }
-            }
-            step();
-        }
-
-        function updateQubitState() {
-            const qubitType = document.getElementById('qubitType').value;
-            if (qubitType === "random") {
-                const theta = Math.random() * Math.PI;
-                const phi = Math.random() * 2 * Math.PI;
-                const x = Math.sin(theta) * Math.cos(phi);
-                const y = Math.cos(theta);
-                const z = Math.sin(theta) * Math.sin(phi);
-                animateArrow(x, y, z);
-            } else if (qubitType === "zero") {
-                animateArrow(0, 1, 0); // |0⟩ to top
-            } else if (qubitType === "one") {
-                animateArrow(0, -1, 0); // |1⟩ to bottom
-            }
-        }
-
-        function clearQubit() {
-            animateArrow(0, 1, 0); // Reset to top (|0⟩)
-        }
-
-        // Initialize when page loads
-        window.onload = function() {
-            if (typeof THREE === 'undefined') {
-                document.body.innerHTML = "<p style='color: red;'>Error: Three.js not loaded!</p>";
-            } else {
-                init();
-            }
-        };
-    </script>
-</body>
-</html>
+            init
