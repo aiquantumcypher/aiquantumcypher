@@ -121,6 +121,8 @@
             scene.add(arrow);
             
             controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableZoom = true;
+            controls.enableRotate = true;
             
             camera.position.z = 3;
             animate();
@@ -136,9 +138,11 @@
             if (qubitType === "random") {
                 let theta = Math.random() * Math.PI;
                 let phi = Math.random() * 2 * Math.PI;
-                arrow.position.x = Math.sin(theta) * Math.cos(phi);
-                arrow.position.y = Math.cos(theta);
-                arrow.position.z = Math.sin(theta) * Math.sin(phi);
+                arrow.position.set(
+                    Math.sin(theta) * Math.cos(phi),
+                    Math.cos(theta),
+                    Math.sin(theta) * Math.sin(phi)
+                );
             } else {
                 arrow.position.set(0, 1, 0);
             }
