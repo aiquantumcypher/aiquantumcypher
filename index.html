@@ -169,12 +169,14 @@
             arrow.add(shaft, head);
             scene.add(arrow);
 
-            camera.position.z = 3;
-            arrow.lookAt(0, 1, 0); // Start pointing up (|0⟩)
+            camera.position.set(0, 0, 3); // Camera looking at origin
+            arrow.rotation.set(0, 0, 0); // Start pointing up (y = 1)
+
+            console.log("Initial arrow direction: should point up (0, 1, 0)");
 
             animate();
             initDiagrams();
-            updateCircuitDiagram("zero"); // Initial circuit
+            updateCircuitDiagram("zero");
         }
 
         function animate() {
@@ -184,11 +186,11 @@
 
         function updateQubitState() {
             const qubitType = document.getElementById('qubitType').value;
-            arrow.rotation.set(0, 0, 0); // Reset rotation to default (pointing up)
+            console.log("Selected qubit type:", qubitType); // Debug the selection
 
             if (qubitType === "random") {
-                const theta = Math.random() * Math.PI; // [0, π] for full sphere
-                const phi = Math.random() * 2 * Math.PI; // [0, 2π]
+                const theta = Math.random() * Math.PI;
+                const phi = Math.random() * 2 * Math.PI;
                 const x = Math.sin(theta) * Math.cos(phi);
                 const y = Math.cos(theta);
                 const z = Math.sin(theta) * Math.sin(phi);
@@ -200,26 +202,25 @@
             } else if (qubitType === "one") {
                 arrow.lookAt(0, -1, 0); // |1⟩, south pole
                 console.log("|1⟩ direction: (0, -1, 0)");
+            } else {
+                console.log("Unexpected qubitType:", qubitType); // Catch any mismatch
             }
             updateCircuitDiagram(qubitType);
         }
 
         function setSuperposition() {
-            arrow.rotation.set(0, 0, 0);
             arrow.lookAt(1, 0, 0); // |+⟩ state (Hadamard)
             console.log("Superposition |+⟩ direction: (1, 0, 0)");
             updateCircuitDiagram("superposition");
         }
 
         function setEntanglement() {
-            arrow.rotation.set(0, 0, 0);
             arrow.lookAt(1, 1, 0); // Simplified entangled state visualization
             console.log("Entanglement direction: (1, 1, 0)");
             updateCircuitDiagram("entanglement");
         }
 
         function clearQubit() {
-            arrow.rotation.set(0, 0, 0);
             arrow.lookAt(0, 1, 0); // Reset to |0⟩ (up)
             console.log("Cleared to |0⟩ direction: (0, 1, 0)");
             updateCircuitDiagram("zero");
