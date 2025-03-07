@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IBM Quantum Computer Simulation with Clifford Circuits, Superposition, and Entanglement</title>
+    <title>IBM Quantum Computer Simulation</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <style>
         body {
@@ -42,7 +42,7 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: #00ffff;
+            background: #ffffff; /* Changed to white */
             color: #000;
             border: none;
             padding: 10px;
@@ -83,10 +83,6 @@
         select:hover, button:hover {
             background: #555;
         }
-        .theory-text {
-            font-size: 16px;
-            line-height: 1.5;
-        }
         #circuitDiagram, #colorfulDiagrams {
             margin: 20px auto;
             width: 400px;
@@ -104,7 +100,7 @@
     </style>
 </head>
 <body>
-    <h1>IBM Quantum Computer Simulation with Clifford Circuits, Superposition, and Entanglement</h1>
+    <h1>IBM Quantum Computer Simulation</h1>
     <div class="carousel-container">
         <div class="carousel">
             <div class="carousel-item">
@@ -116,15 +112,13 @@
                         <option value="one">|1⟩</option>
                     </select>
                     <button onclick="updateQubitState()">Update Qubit State</button>
-                    <button onclick="setSuperposition()">Superposition</button>
-                    <button onclick="setEntanglement()">Entanglement</button>
                     <button onclick="clearQubit()">Clear</button>
                 </div>
                 <div id="circuitDiagram"></div>
                 <div id="colorfulDiagrams"></div>
             </div>
             <div class="carousel-item">
-                <p class="theory-text">Quantum Computing Theory: Clifford circuits use gates like H and CNOT. |0⟩ points up, |1⟩ points down. Superposition and entanglement unlock quantum magic!</p>
+                <!-- Second slide left empty -->
             </div>
         </div>
         <button class="carousel-btn left" onclick="moveCarousel(-1)"><</button>
@@ -208,18 +202,6 @@
             updateCircuitDiagram(qubitType);
         }
 
-        function setSuperposition() {
-            arrow.lookAt(1, 0, 0); // |+⟩ state (Hadamard)
-            console.log("Superposition |+⟩ direction: (1, 0, 0)");
-            updateCircuitDiagram("superposition");
-        }
-
-        function setEntanglement() {
-            arrow.lookAt(1, 1, 0); // Simplified entangled state visualization
-            console.log("Entanglement direction: (1, 1, 0)");
-            updateCircuitDiagram("entanglement");
-        }
-
         function clearQubit() {
             arrow.lookAt(0, 1, 0); // Reset to |0⟩ (up)
             console.log("Cleared to |0⟩ direction: (0, 1, 0)");
@@ -239,35 +221,19 @@
                 <text x="10" y="45" font-size="16">q₀</text>
             `;
 
-            if (state === "superposition") {
-                circuit.innerHTML += `
-                    <rect x="100" y="30" width="40" height="40" fill="none" stroke="#00f" stroke-width="2"/>
-                    <text x="110" y="55" font-size="16" fill="#00f">H</text>`;
-                description = "Superposition: The Hadamard (H) gate creates a magical state where the qubit is equally |0⟩ and |1⟩—like a coin spinning in the air!";
-            } else if (state === "entanglement") {
-                circuit.innerHTML += `
-                    <line x1="20" y1="90" x2="380" y2="90" stroke="#000" stroke-width="2"/>
-                    <text x="10" y="85" font-size="16">q₁</text>
-                    <rect x="100" y="30" width="40" height="40" fill="none" stroke="#00f" stroke-width="2"/>
-                    <text x="110" y="55" font-size="16" fill="#00f">H</text>
-                    <circle cx="200" cy="50" r="10" fill="none" stroke="#0f0" stroke-width="2"/>
-                    <line x1="200" y1="50" x2="200" y2="90" stroke="#0f0" stroke-width="2"/>
-                    <circle cx="200" cy="90" r="10" fill="#0f0" stroke="#0f0" stroke-width="2"/>
-                `;
-                description = "Entanglement: H + CNOT links two qubits in a spooky dance—measuring one instantly sets the other, no matter the distance!";
-            } else if (state === "zero") {
+            if (state === "zero") {
                 circuit.innerHTML += `<text x="100" y="55" font-size="16">|0⟩</text>`;
-                description = "Starting point: Qubit in the pure |0⟩ state, pointing up.";
+                description = "Qubit in the pure |0⟩ state, pointing up.";
             } else if (state === "one") {
                 circuit.innerHTML += `
                     <rect x="100" y="30" width="40" height="40" fill="none" stroke="#000" stroke-width="2"/>
                     <text x="110" y="55" font-size="16">X</text>`;
-                description = "Flipped: The X gate turns |0⟩ into |1⟩, pointing down.";
+                description = "The X gate turns |0⟩ into |1⟩, pointing down.";
             } else if (state === "random") {
                 circuit.innerHTML += `
                     <rect x="100" y="30" width="40" height="40" fill="none" stroke="#f0f" stroke-width="2"/>
                     <text x="110" y="55" font-size="16" fill="#f0f">R</text>`;
-                description = "Random: A wild qubit state anywhere on the Bloch sphere!";
+                description = "Random qubit state anywhere on the Bloch sphere.";
             }
 
             svg.appendChild(circuit);
