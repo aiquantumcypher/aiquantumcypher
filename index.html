@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IBM Quantum Computer Simulation</title>
+    <title>IBM Quantum Computer Simulation with Clifford Circuits, Superposition, and Entanglement</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <style>
         body {
@@ -42,7 +42,7 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: #ffffff; /* Changed to white */
+            background: #ffffff;
             color: #000;
             border: none;
             padding: 10px;
@@ -96,171 +96,3 @@
             font-size: 14px;
             color: #0ff;
             margin-top: 10px;
-        }
-    </style>
-</head>
-<body>
-    <h1>IBM Quantum Computer Simulation</h1>
-    <div class="carousel-container">
-        <div class="carousel">
-            <div class="carousel-item">
-                <div id="qubitCanvas"></div>
-                <div class="controls">
-                    <select id="qubitType">
-                        <option value="random">Random</option>
-                        <option value="zero">|0⟩</option>
-                        <option value="one">|1⟩</option>
-                    </select>
-                    <button onclick="updateQubitState()">Update Qubit State</button>
-                    <button onclick="clearQubit()">Clear</button>
-                </div>
-                <div id="circuitDiagram"></div>
-                <div id="colorfulDiagrams"></div>
-            </div>
-            <div class="carousel-item">
-                <!-- Second slide left empty -->
-            </div>
-        </div>
-        <button class="carousel-btn left" onclick="moveCarousel(-1)"><</button>
-        <button class="carousel-btn right" onclick="moveCarousel(1)">></button>
-    </div>
-
-    <script>
-        let currentSlide = 0;
-        const totalSlides = 2;
-
-        function moveCarousel(direction) {
-            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-            document.querySelector('.carousel').style.transform = `translateX(-${currentSlide * 100}%)`;
-        }
-
-        let scene, camera, renderer, qubitSphere, arrow;
-
-        function initQubit() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(400, 400);
-            document.getElementById('qubitCanvas').appendChild(renderer.domElement);
-
-            qubitSphere = new THREE.Mesh(
-                new THREE.SphereGeometry(1, 32, 32),
-                new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true })
-            );
-            scene.add(qubitSphere);
-
-            arrow = new THREE.Group();
-            const shaft = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.02, 0.02, 1, 12),
-                new THREE.MeshBasicMaterial({ color: 0xff0000 })
-            );
-            shaft.position.y = 0.5;
-            const head = new THREE.Mesh(
-                new THREE.ConeGeometry(0.08, 0.2, 32),
-                new THREE.MeshBasicMaterial({ color: 0xff0000 })
-            );
-            head.position.y = 1;
-            arrow.add(shaft, head);
-            scene.add(arrow);
-
-            camera.position.set(0, 0, 3); // Camera looking at origin
-            arrow.rotation.set(0, 0, 0); // Start pointing up (y = 1) for |0⟩
-
-            console.log("Initial arrow direction: pointing up (0, 1, 0) for |0⟩");
-
-            animate();
-            initDiagrams();
-            updateCircuitDiagram("zero"); // Initial state is |0⟩
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-        }
-
-        function updateQubitState() {
-            const qubitType = document.getElementById('qubitType').value;
-            console.log("Selected qubit type:", qubitType);
-
-            if (qubitType === "random") {
-                const theta = Math.random() * Math.PI;
-                const phi = Math.random() * 2 * Math.PI;
-                const x = Math.sin(theta) * Math.cos(phi);
-                const y = Math.cos(theta);
-                const z = Math.sin(theta) * Math.sin(phi);
-                arrow.lookAt(x, y, z);
-                console.log("Random state:", { x, y, z });
-            } else if (qubitType === "zero") {
-                arrow.lookAt(0, 1, 0); // |0⟩, north pole (up)
-                console.log("|0⟩ direction: (0, 1, 0)");
-            } else if (qubitType === "one") {
-                arrow.lookAt(0, -1, 0); // |1⟩, south pole (down)
-                console.log("|1⟩ direction: (0, -1, 0)");
-            } else {
-                console.log("Unexpected qubitType:", qubitType);
-            }
-            updateCircuitDiagram(qubitType);
-        }
-
-        function clearQubit() {
-            arrow.lookAt(0, 1, 0); // Reset to |0⟩ (up)
-            console.log("Cleared to |0⟩ direction: (0, 1, 0)");
-            updateCircuitDiagram("zero");
-        }
-
-        function updateCircuitDiagram(state) {
-            const svg = document.getElementById('circuitDiagram');
-            svg.innerHTML = '';
-            const circuit = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            circuit.setAttribute("width", "400");
-            circuit.setAttribute("height", "150");
-
-            let description = '';
-            circuit.innerHTML = `
-                <line x1="20" y1="50" x2="380" y2="50" stroke="#000" stroke-width="2"/>
-                <text x="10" y="45" font-size="16">q₀</text>
-            `;
-
-            if (state === "zero") {
-                circuit.innerHTML += `<text x="100" y="55" font-size="16">|0⟩</text>`;
-                description = "Qubit in the pure |0⟩ state, pointing up.";
-            } else if (state === "one") {
-                circuit.innerHTML += `
-                    <rect x="100" y="30" width="40" height="40" fill="none" stroke="#000" stroke-width="2"/>
-                    <text x="110" y="55" font-size="16">X</text>`;
-                description = "The X gate turns |0⟩ into |1⟩, pointing down.";
-            } else if (state === "random") {
-                circuit.innerHTML += `
-                    <rect x="100" y="30" width="40" height="40" fill="none" stroke="#f0f" stroke-width="2"/>
-                    <text x="110" y="55" font-size="16" fill="#f0f">R</text>`;
-                description = "Random qubit state anywhere on the Bloch sphere.";
-            }
-
-            svg.appendChild(circuit);
-            const descText = document.createElement("div");
-            descText.className = "description";
-            descText.textContent = description;
-            svg.appendChild(descText);
-        }
-
-        function initDiagrams() {
-            const diagrams = document.getElementById('colorfulDiagrams');
-            diagrams.innerHTML = `
-                <svg width="400" height="100">
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="#ff0" stroke-width="2"/>
-                    <line x1="50" y1="50" x2="50" y2="10" stroke="#f00" stroke-width="2"/>
-                    <text x="20" y="95" font-size="12" fill="#ff0">|0⟩</text>
-                    <circle cx="150" cy="50" r="40" fill="none" stroke="#0ff" stroke-width="2"/>
-                    <line x1="150" y1="50" x2="190" y2="50" stroke="#00f" stroke-width="2"/>
-                    <text x="120" y="95" font-size="12" fill="#0ff">|+⟩</text>
-                    <circle cx="250" cy="50" r="40" fill="none" stroke="#f0f" stroke-width="2"/>
-                    <line x1="250" y1="50" x2="210" y2="90" stroke="#f0f" stroke-width="2"/>
-                    <text x="220" y="95" font-size="12" fill="#f0f">Random</text>
-                </svg>
-            `;
-        }
-
-        initQubit();
-    </script>
-</body>
-</html>
