@@ -3,87 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IBM Quantum Computer Simulation</title>
+    <title>Quantum State Simulator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
             background: #000;
             color: #fff;
+            font-family: Arial, sans-serif;
             text-align: center;
         }
-        #qubitCanvas {
-            width: 400px;
-            height: 400px;
+        canvas {
+            display: block;
             margin: 20px auto;
         }
-        .quantum-controls {
-            margin-top: 10px;
-        }
-        .quantum-controls select, .quantum-controls button {
+        button {
+            padding: 10px 20px;
             margin: 5px;
-            padding: 10px;
-            font-size: 14px;
             background: #333;
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #555;
         }
     </style>
 </head>
 <body>
-    <h1>IBM Quantum Computer Simulation</h1>
-    <h2>Create Qubit State</h2>
-    <div id="qubitCanvas"></div>
-    <div class="quantum-controls">
-        <select id="qubitType">
-            <option value="random">Random</option>
-            <option value="zero">|0⟩</option>
-            <option value="one">|1⟩</option>
-        </select>
-        <button onclick="createQubit()">Create Qubit</button>
-        <button onclick="clearQubit()">Reset</button>
-    </div>
+    <h1>Quantum State Simulator</h1>
+    <button onclick="createRandomQuantumState()">Create Random Quantum State</button>
+    <button onclick="resetState()">Reset</button>
 
     <script>
-        let scene, camera, renderer, qubitSphere, arrow, controls;
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        let arrow;
 
-        function initQubit() {
-            // Scene setup
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ antialias: true });
+        function init() {
             renderer.setSize(400, 400);
-            document.getElementById('qubitCanvas').appendChild(renderer.domElement);
+            document.body.appendChild(renderer.domElement);
 
-            // Bloch sphere (white, wireframe)
-            const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
-            const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.5 });
-            qubitSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-            scene.add(qubitSphere);
+            // Bloch sphere
+            const sphere = new THREE.Mesh(
+                new THREE.SphereGeometry(1, 32, 32),
+                new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, opacity: 0.7, transparent: true })
+            );
+            scene.add(sphere);
 
-            // Arrow (red, starting from center)
-            const arrowGroup = new THREE.Group();
-            const shaftGeometry = new THREE.CylinderGeometry(0.02, 0.02, 1, 12);
-            const shaftMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-            const shaft = new THREE.Mesh(shaftGeometry, shaftMaterial);
-            shaft.position.y = 0.5; // Half length to extend from center
-            const headGeometry = new THREE.ConeGeometry(0.08, 0.2, 32);
-            const headMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-            const head = new THREE.Mesh(headGeometry, headMaterial);
-            head.position.y = 1; // Tip at end of shaft
-            arrowGroup.add(shaft, head);
-            arrow = arrowGroup;
+            // Arrow
+            arrow = new THREE.Group();
+            const shaft = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.02, 0.02, 1, 12),
+                new THREE.MeshBasicMaterial({ color: 0xff0000 })
+            );
+            shaft.position.y = 0.5;
+            const head = new THREE.Mesh(
+                new THREE.ConeGeometry(0.08, 0.2, 32),
+                new THREE.MeshBasicMaterial({ color: 0xff0000 })
+            );
+            head.position.y = 1;
+            arrow.add(shaft, head);
             scene.add(arrow);
 
-            // Orbit controls
-            controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableZoom = true;
+            // Camera and controls
             camera.position.z = 3;
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableZoom = true;
+
+            // Initial state
+            arrow.lookAt(0, 1, 0);
 
             animate();
         }
@@ -93,37 +86,128 @@
             renderer.render(scene, camera);
         }
 
-        function createQubit() {
-            const qubitType = document.getElementById('qubitType').value;
-            let theta, phi;
-
-            if (qubitType === "random") {
-                theta = Math.random() * Math.PI; // Polar angle [0, π]
-                phi = Math.random() * 2 * Math.PI; // Azimuthal angle [0, 2π]
-            } else if (qubitType === "zero") {
-                theta = 0; // |0⟩ points to north pole
-                phi = 0;
-            } else if (qubitType === "one") {
-                theta = Math.PI; // |1⟩ points to south pole
-                phi = 0;
-            }
-
-            // Convert spherical coordinates to Cartesian for arrow direction
+        function createRandomQuantumState() {
+            const theta = Math.random() * Math.PI;
+            const phi = Math.random() * 2 * Math.PI;
             const x = Math.sin(theta) * Math.cos(phi);
             const y = Math.cos(theta);
             const z = Math.sin(theta) * Math.sin(phi);
-
-            // Set arrow rotation
-            arrow.rotation.set(0, 0, 0); // Reset rotation
-            arrow.lookAt(new THREE.Vector3(x, y, z));
+            arrow.rotation.set(0, 0, 0);
+            arrow.lookAt(x, y, z);
         }
 
-        function clearQubit() {
-            arrow.rotation.set(0, 0, 0); // Reset to initial state (|0⟩)
-            arrow.lookAt(new THREE.Vector3(0, 1, 0));
+        function resetState() {
+            arrow.rotation.set(0, 0, 0);
+            arrow.lookAt(0, 1, 0);
         }
 
-        initQubit();
+        init();
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum State Simulator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        canvas {
+            display: block;
+            margin: 20px auto;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quantum State Simulator</h1>
+    <button onclick="createRandomQuantumState()">Create Random Quantum State</button>
+    <button onclick="resetState()">Reset</button>
+
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        let arrow;
+
+        function init() {
+            renderer.setSize(400, 400);
+            document.body.appendChild(renderer.domElement);
+
+            // Bloch sphere
+            const sphere = new THREE.Mesh(
+                new THREE.SphereGeometry(1, 32, 32),
+                new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, opacity: 0.7, transparent: true })
+            );
+            scene.add(sphere);
+
+            // Arrow
+            arrow = new THREE.Group();
+            const shaft = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.02, 0.02, 1, 12),
+                new THREE.MeshBasicMaterial({ color: 0xff0000 })
+            );
+            shaft.position.y = 0.5;
+            const head = new THREE.Mesh(
+                new THREE.ConeGeometry(0.08, 0.2, 32),
+                new THREE.MeshBasicMaterial({ color: 0xff0000 })
+            );
+            head.position.y = 1;
+            arrow.add(shaft, head);
+            scene.add(arrow);
+
+            // Camera and controls
+            camera.position.z = 3;
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableZoom = true;
+
+            // Initial state
+            arrow.lookAt(0, 1, 0);
+
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        function createRandomQuantumState() {
+            const theta = Math.random() * Math.PI;
+            const phi = Math.random() * 2 * Math.PI;
+            const x = Math.sin(theta) * Math.cos(phi);
+            const y = Math.cos(theta);
+            const z = Math.sin(theta) * Math.sin(phi);
+            arrow.rotation.set(0, 0, 0);
+            arrow.lookAt(x, y, z);
+        }
+
+        function resetState() {
+            arrow.rotation.set(0, 0, 0);
+            arrow.lookAt(0, 1, 0);
+        }
+
+        init();
     </script>
 </body>
 </html>
