@@ -15,39 +15,10 @@
             color: #fff;
             text-align: center;
         }
-        .carousel-container {
-            width: 80%;
-            max-width: 800px;
+        #qubitCanvas {
+            width: 400px;
+            height: 400px;
             margin: 20px auto;
-            position: relative;
-            overflow: hidden;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .carousel {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-        .carousel-item {
-            min-width: 100%;
-            box-sizing: border-box;
-        }
-        .carousel-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 255, 255, 0.8);
-            border: none;
-            cursor: pointer;
-            font-size: 20px;
-            padding: 10px;
-        }
-        .left {
-            left: 10px;
-        }
-        .right {
-            right: 10px;
         }
         .quantum-controls {
             margin-top: 10px;
@@ -56,75 +27,64 @@
             margin: 5px;
             padding: 10px;
             font-size: 14px;
-        }
-        #qubitCanvas {
-            width: 400px;
-            height: 400px;
-            margin: auto;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <h1>IBM Quantum Computer Simulation</h1>
-    <h2>Create Random Qubit State</h2>
-    <div class="carousel-container">
-        <div class="carousel">
-            <div class="carousel-item">
-                <div id="qubitCanvas"></div>
-                <div class="quantum-controls">
-                    <select id="qubitType">
-                        <option value="random">Random</option>
-                        <option value="zero">|0> Position</option>
-                    </select>
-                    <button onclick="createQubit()">Create Qubit</button>
-                    <button onclick="clearQubit()">Clear</button>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <p>Quantum Computing Theory</p>
-            </div>
-        </div>
-        <button class="carousel-btn left" onclick="moveCarousel(-1)">&lt;</button>
-        <button class="carousel-btn right" onclick="moveCarousel(1)">&gt;</button>
+    <h2>Create Qubit State</h2>
+    <div id="qubitCanvas"></div>
+    <div class="quantum-controls">
+        <select id="qubitType">
+            <option value="random">Random</option>
+            <option value="zero">|0⟩</option>
+            <option value="one">|1⟩</option>
+        </select>
+        <button onclick="createQubit()">Create Qubit</button>
+        <button onclick="clearQubit()">Reset</button>
     </div>
-    
-    <script>
-        let currentSlide = 0;
-        function moveCarousel(direction) {
-            const carousel = document.querySelector('.carousel');
-            const totalSlides = document.querySelectorAll('.carousel-item').length;
-            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
-        }
 
+    <script>
         let scene, camera, renderer, qubitSphere, arrow, controls;
+
         function initQubit() {
+            // Scene setup
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(400, 400);
             document.getElementById('qubitCanvas').appendChild(renderer.domElement);
-            
-            let geometry = new THREE.SphereGeometry(1, 32, 32);
-            let material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
-            qubitSphere = new THREE.Mesh(geometry, material);
+
+            // Bloch sphere (white, wireframe)
+            const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+            const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.5 });
+            qubitSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
             scene.add(qubitSphere);
-            
-            let arrowGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1, 12);
-            let arrowMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-            arrow = new THREE.Mesh(arrowGeometry, arrowMaterial);
-            arrow.position.y = 0.5;
-            let arrowHeadGeometry = new THREE.ConeGeometry(0.2, 0.5, 32);
-            let arrowHead = new THREE.Mesh(arrowHeadGeometry, arrowMaterial);
-            arrowHead.position.y = 1;
-            arrow.add(arrowHead);
+
+            // Arrow (red, starting from center)
+            const arrowGroup = new THREE.Group();
+            const shaftGeometry = new THREE.CylinderGeometry(0.02, 0.02, 1, 12);
+            const shaftMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+            const shaft = new THREE.Mesh(shaftGeometry, shaftMaterial);
+            shaft.position.y = 0.5; // Half length to extend from center
+            const headGeometry = new THREE.ConeGeometry(0.08, 0.2, 32);
+            const headMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+            const head = new THREE.Mesh(headGeometry, headMaterial);
+            head.position.y = 1; // Tip at end of shaft
+            arrowGroup.add(shaft, head);
+            arrow = arrowGroup;
             scene.add(arrow);
-            
+
+            // Orbit controls
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableZoom = true;
-            controls.enableRotate = true;
-            
             camera.position.z = 3;
+
             animate();
         }
 
@@ -134,22 +94,33 @@
         }
 
         function createQubit() {
-            let qubitType = document.getElementById('qubitType').value;
+            const qubitType = document.getElementById('qubitType').value;
+            let theta, phi;
+
             if (qubitType === "random") {
-                let theta = Math.random() * Math.PI;
-                let phi = Math.random() * 2 * Math.PI;
-                arrow.position.set(
-                    Math.sin(theta) * Math.cos(phi),
-                    Math.cos(theta),
-                    Math.sin(theta) * Math.sin(phi)
-                );
-            } else {
-                arrow.position.set(0, 1, 0);
+                theta = Math.random() * Math.PI; // Polar angle [0, π]
+                phi = Math.random() * 2 * Math.PI; // Azimuthal angle [0, 2π]
+            } else if (qubitType === "zero") {
+                theta = 0; // |0⟩ points to north pole
+                phi = 0;
+            } else if (qubitType === "one") {
+                theta = Math.PI; // |1⟩ points to south pole
+                phi = 0;
             }
+
+            // Convert spherical coordinates to Cartesian for arrow direction
+            const x = Math.sin(theta) * Math.cos(phi);
+            const y = Math.cos(theta);
+            const z = Math.sin(theta) * Math.sin(phi);
+
+            // Set arrow rotation
+            arrow.rotation.set(0, 0, 0); // Reset rotation
+            arrow.lookAt(new THREE.Vector3(x, y, z));
         }
 
         function clearQubit() {
-            arrow.position.set(0, 1, 0);
+            arrow.rotation.set(0, 0, 0); // Reset to initial state (|0⟩)
+            arrow.lookAt(new THREE.Vector3(0, 1, 0));
         }
 
         initQubit();
