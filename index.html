@@ -63,7 +63,7 @@
             height: 400px;
             margin: 0 auto;
             border: 1px solid #fff;
-            background: #000; /* Fallback background to see canvas */
+            background: #000; /* Fallback to see canvas area */
         }
         .controls {
             margin-top: 15px;
@@ -127,6 +127,14 @@
     </div>
 
     <script>
+        // Check if Three.js loaded
+        if (typeof THREE === 'undefined') {
+            console.error("Three.js not loaded! Check CDN or network.");
+            document.body.innerHTML += "<p style='color: red;'>Error: Three.js failed to load. Please check your network or use a local copy.</p>";
+        } else {
+            console.log("Three.js loaded successfully.");
+        }
+
         let scene, camera, renderer, qubitSphere, arrow;
 
         function initQubit() {
@@ -141,13 +149,14 @@
                     return;
                 }
                 canvasContainer.appendChild(renderer.domElement);
-                console.log("Canvas appended successfully");
+                console.log("Canvas appended to #qubitCanvas");
 
                 qubitSphere = new THREE.Mesh(
                     new THREE.SphereGeometry(1, 32, 32),
                     new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true })
                 );
                 scene.add(qubitSphere);
+                console.log("Sphere added to scene");
 
                 arrow = new THREE.Group();
                 const shaft = new THREE.Mesh(
@@ -162,17 +171,22 @@
                 head.position.y = 1;
                 arrow.add(shaft, head);
                 scene.add(arrow);
+                console.log("Arrow added to scene");
 
                 camera.position.set(0, 0, 3); // Camera looking at origin
                 arrow.rotation.set(0, 0, 0); // Start pointing up (y = 1) for |0⟩
 
                 console.log("Initial arrow direction: pointing up (0, 1, 0) for |0⟩");
 
+                // Test single render
+                renderer.render(scene, camera);
+                console.log("Initial render attempted");
+
                 animate();
                 initDiagrams();
                 updateCircuitDiagram("zero"); // Initial state is |0⟩
             } catch (error) {
-                console.error("Error initializing Three.js:", error);
+                console.error("Error in initQubit:", error);
             }
         }
 
@@ -183,9 +197,9 @@
 
         function animateArrow(targetX, targetY, targetZ, state) {
             let step = 0;
-            const steps = 60; // Animation over 60 frames (1 second at 60 FPS)
-            const forwardZ = 1; // Move forward to z = 1
-            const backZ = -1;  // Then back to z = -1
+            const steps = 60;
+            const forwardZ = 1;
+            const backZ = -1;
 
             function animationStep() {
                 step++;
@@ -219,16 +233,16 @@
                 const z = Math.sin(theta) * Math.sin(phi);
                 animateArrow(x, y, z, "random");
             } else if (qubitType === "zero") {
-                animateArrow(0, 1, 0, "zero"); // |0⟩ to top (y = 1)
+                animateArrow(0, 1, 0, "zero"); // |0⟩ to top
             } else if (qubitType === "one") {
-                animateArrow(0, -1, 0, "one"); // |1⟩ to bottom (y = -1)
+                animateArrow(0, -1, 0, "one"); // |1⟩ to bottom
             } else {
                 console.log("Unexpected qubitType:", qubitType);
             }
         }
 
         function clearQubit() {
-            animateArrow(0, 1, 0, "zero"); // Reset to top (y = 1) for |0⟩
+            animateArrow(0, 1, 0, "zero"); // Reset to top
             console.log("Cleared to |0⟩ direction: (0, 1, 0)");
         }
 
@@ -246,4 +260,18 @@
             let description = '';
             circuit.innerHTML = `
                 <line x1="20" y1="50" x2="380" y2="50" stroke="#000" stroke-width="2"/>
-                <text
+                <text x="10" y="45" font-size="16">q₀</text>
+            `;
+
+            if (state === "zero") {
+                circuit.innerHTML += `<text x="100" y="55" font-size="16">|0⟩</text>`;
+                description = "Qubit in the pure |0⟩ state, pointing up.";
+            } else if (state === "one") {
+                circuit.innerHTML += `
+                    <rect x="100" y="30" width="40" height="40" fill="none" stroke="#000" stroke-width="2"/>
+                    <text x="110" y="55" font-size="16">X</text>`;
+                description = "The X gate turns |0⟩ into |1⟩, pointing down.";
+            } else if (state === "random") {
+                circuit.innerHTML += `
+                    <rect x="100" y="30" width="40" height="40" fill="none" stroke="#f0f" stroke-width="2"/>
+                    <text x="110" y="55" font-size="16" fill="#f0
