@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantum State Simulator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -14,11 +13,11 @@
             font-family: Arial, sans-serif;
             text-align: center;
         }
-        canvas {
-            width: 400px !important;
-            height: 400px !important;
-            display: block;
+        #canvasContainer {
+            width: 400px;
+            height: 400px;
             margin: 20px auto;
+            border: 1px solid #fff; /* Visual cue for container */
         }
         button {
             padding: 10px 20px;
@@ -28,10 +27,10 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
         }
-        button:hover {
-            background: #555;
+        #debug {
+            margin: 10px;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -40,48 +39,68 @@
     <div id="canvasContainer"></div>
     <button onclick="createRandomQuantumState()">Create Random Quantum State</button>
     <button onclick="resetState()">Reset</button>
+    <div id="debug"></div>
 
     <script>
+        // Debug function
+        function log(message) {
+            document.getElementById('debug').innerText += message + '\n';
+        }
+
+        // Scene setup
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         let arrow;
 
         function init() {
-            renderer.setSize(400, 400);
-            document.getElementById('canvasContainer').appendChild(renderer.domElement);
+            try {
+                renderer.setSize(400, 400);
+                const container = document.getElementById('canvasContainer');
+                container.appendChild(renderer.domElement);
+                log('Renderer initialized and appended');
 
-            // Bloch sphere
-            const sphere = new THREE.Mesh(
-                new THREE.SphereGeometry(1, 32, 32),
-                new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true })
-            );
-            scene.add(sphere);
+                // Test WebGL
+                if (!renderer.getContext()) {
+                    throw new Error('WebGL not supported');
+                }
+                log('WebGL context confirmed');
 
-            // Arrow
-            arrow = new THREE.Group();
-            const shaft = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.02, 0.02, 1, 12),
-                new THREE.MeshBasicMaterial({ color: 0xff0000 })
-            );
-            shaft.position.y = 0.5;
-            const head = new THREE.Mesh(
-                new THREE.ConeGeometry(0.08, 0.2, 32),
-                new THREE.MeshBasicMaterial({ color: 0xff0000 })
-            );
-            head.position.y = 1;
-            arrow.add(shaft, head);
-            scene.add(arrow);
+                // Bloch sphere
+                const sphere = new THREE.Mesh(
+                    new THREE.SphereGeometry(1, 32, 32),
+                    new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true })
+                );
+                scene.add(sphere);
+                log('Bloch sphere added');
 
-            // Camera and controls
-            camera.position.z = 3;
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableZoom = true;
+                // Arrow
+                arrow = new THREE.Group();
+                const shaft = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.02, 0.02, 1, 12),
+                    new THREE.MeshBasicMaterial({ color: 0xff0000 })
+                );
+                shaft.position.y = 0.5;
+                const head = new THREE.Mesh(
+                    new THREE.ConeGeometry(0.08, 0.2, 32),
+                    new THREE.MeshBasicMaterial({ color: 0xff0000 })
+                );
+                head.position.y = 1;
+                arrow.add(shaft, head);
+                scene.add(arrow);
+                log('Arrow added');
 
-            // Initial state
-            arrow.lookAt(0, 1, 0);
+                // Camera
+                camera.position.z = 3;
+                log('Camera positioned');
 
-            animate();
+                // Initial state
+                arrow.lookAt(0, 1, 0);
+
+                animate();
+            } catch (error) {
+                log('Error: ' + error.message);
+            }
         }
 
         function animate() {
@@ -97,14 +116,17 @@
             const z = Math.sin(theta) * Math.sin(phi);
             arrow.rotation.set(0, 0, 0);
             arrow.lookAt(x, y, z);
+            log('Random state set');
         }
 
         function resetState() {
             arrow.rotation.set(0, 0, 0);
             arrow.lookAt(0, 1, 0);
+            log('State reset');
         }
 
-        // Start it up
+        // Kick it off
+        log('Starting initialization...');
         init();
     </script>
 </body>
