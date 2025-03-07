@@ -108,4 +108,85 @@
                 <p class="theory-text">Quantum Computing Theory: Qubits exist in superposition. |0⟩ points up (north pole), |1⟩ points down (south pole) on the Bloch sphere.</p>
             </div>
         </div>
-        <button class="carousel-btn left" onclick="moveCarousel(-
+        <button class="carousel-btn left" onclick="moveCarousel(-1)"><</button>
+        <button class="carousel-btn right" onclick="moveCarousel(1)">></button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 2;
+
+        function moveCarousel(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            document.querySelector('.carousel').style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        let scene, camera, renderer, qubitSphere, arrow;
+
+        function initQubit() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(400, 400);
+            document.getElementById('qubitCanvas').appendChild(renderer.domElement);
+
+            // White Bloch sphere
+            qubitSphere = new THREE.Mesh(
+                new THREE.SphereGeometry(1, 32, 32),
+                new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true })
+            );
+            scene.add(qubitSphere);
+
+            // Arrow from center
+            arrow = new THREE.Group();
+            const shaft = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.02, 0.02, 1, 12),
+                new THREE.MeshBasicMaterial({ color: 0xff0000 })
+            );
+            shaft.position.y = 0.5;
+            const head = new THREE.Mesh(
+                new THREE.ConeGeometry(0.08, 0.2, 32),
+                new THREE.MeshBasicMaterial({ color: 0xff0000 })
+            );
+            head.position.y = 1;
+            arrow.add(shaft, head);
+            scene.add(arrow);
+
+            camera.position.z = 3;
+            arrow.lookAt(0, 1, 0); // Start pointing up (|0⟩)
+
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        function updateQubitState() {
+            const qubitType = document.getElementById('qubitType').value;
+            arrow.rotation.set(0, 0, 0); // Reset rotation
+
+            if (qubitType === "random") {
+                const theta = Math.random() * Math.PI;
+                const phi = Math.random() * 2 * Math.PI;
+                const x = Math.sin(theta) * Math.cos(phi);
+                const y = Math.cos(theta);
+                const z = Math.sin(theta) * Math.sin(phi);
+                arrow.lookAt(x, y, z);
+            } else if (qubitType === "zero") {
+                arrow.lookAt(0, 1, 0); // |0⟩ points up
+            } else if (qubitType === "one") {
+                arrow.lookAt(0, -1, 0); // |1⟩ points down
+            }
+        }
+
+        function clearQubit() {
+            arrow.rotation.set(0, 0, 0);
+            arrow.lookAt(0, 1, 0); // Reset to |0⟩ (up)
+        }
+
+        initQubit();
+    </script>
+</body>
+</html>
