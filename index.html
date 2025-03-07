@@ -133,8 +133,18 @@
         }
         .description {
             font-size: 14px;
-            color: #0ff;
+            color: #0f0; /* Changed to green as requested */
             margin-top: 10px;
+        }
+        /* Game Slide CSS */
+        .game-container {
+            text-align: center;
+            padding: 20px;
+        }
+        .game-feedback {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #0ff;
         }
         /* End of Qiskit Carousel CSS */
         #about {
@@ -195,9 +205,10 @@
 
     <!-- Qiskit Carousel Section -->
     <section>
-        <h2>IBM Clifford Quantum Computer Simulation</h2>
+        <h2>IBM Quantum Computer Simulation with<br>Clifford Circuits, Superposition, and Entanglement</h2>
         <div class="carousel-container">
             <div class="carousel">
+                <!-- Slide 1: Qubit Visualization -->
                 <div class="carousel-item">
                     <div id="qubitCanvas"></div>
                     <div class="controls">
@@ -214,8 +225,23 @@
                     <div id="circuitDiagram"></div>
                     <div id="colorfulDiagrams"></div>
                 </div>
+                <!-- Slide 2: Theory Text -->
                 <div class="carousel-item">
                     <p class="theory-text">Quantum Computing Theory: Clifford circuits use gates like H and CNOT. |0⟩ points up, |1⟩ points down. Superposition and entanglement unlock quantum magic!</p>
+                </div>
+                <!-- Slide 3: New Game -->
+                <div class="carousel-item">
+                    <div class="game-container">
+                        <h3>Guess the Qubit State!</h3>
+                        <p>Look at the Bloch sphere on Slide 1, then guess the qubit state.</p>
+                        <div class="controls">
+                            <button onclick="guessState('zero')">|0⟩</button>
+                            <button onclick="guessState('one')">|1⟩</button>
+                            <button onclick="guessState('random')">Random</button>
+                            <button onclick="newGame()">New Game</button>
+                        </div>
+                        <div id="gameFeedback" class="game-feedback"></div>
+                    </div>
                 </div>
             </div>
             <button class="carousel-btn left" onclick="moveCarousel(-1)"><</button>
@@ -287,7 +313,7 @@
     <script>
         // Qiskit Carousel JavaScript
         let currentSlide = 0;
-        const totalSlides = 2;
+        const totalSlides = 3; // Updated to 3 slides
 
         function moveCarousel(direction) {
             currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
@@ -295,6 +321,7 @@
         }
 
         let scene, camera, renderer, qubitSphere, arrow;
+        let currentQubitState = "zero"; // Track the current qubit state for the game
 
         function initQubit() {
             scene = new THREE.Scene();
@@ -338,6 +365,7 @@
 
         function updateQubitState() {
             const qubitType = document.getElementById('qubitType').value;
+            currentQubitState = qubitType; // Update for the game
             arrow.rotation.set(0, 0, 0);
             updateCircuitDiagram(qubitType);
 
@@ -358,17 +386,20 @@
         function setSuperposition() {
             arrow.rotation.set(0, 0, 0);
             arrow.lookAt(1, 0, 0); // |+⟩ state (Hadamard)
+            currentQubitState = "superposition"; // Update for the game
             updateCircuitDiagram("superposition");
         }
 
         function setEntanglement() {
             arrow.rotation.set(0, 0, 0);
             arrow.lookAt(1, 1, 0); // Simplified entangled state visualization
+            currentQubitState = "entanglement"; // Update for the game
             updateCircuitDiagram("entanglement");
         }
 
         function clearQubit() {
             arrow.rotation.set(0, 0, 0); // Reset to |0⟩ (up)
+            currentQubitState = "zero"; // Update for the game
             updateCircuitDiagram("zero");
         }
 
@@ -440,14 +471,8 @@
             `;
         }
 
-        initQubit();
-
-        // Existing Email Link Script
-        document.getElementById('email-link').addEventListener('click', function() {
-            let email = "info@aiquantumcypher.com";
-            window.location.href = "mailto:" + email;
-        });
-    </script>
-
-</body>
-</html>
+        // Game Logic
+        function newGame() {
+            const states = ["zero", "one", "random", "superposition", "entanglement"];
+            const randomState = states[Math.floor(Math.random() * states.length)];
+            currentQubitState = random
