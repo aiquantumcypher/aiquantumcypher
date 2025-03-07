@@ -100,95 +100,12 @@
                         <option value="zero">|0⟩</option>
                         <option value="one">|1⟩</option>
                     </select>
-                    <button onclick="createQubit()">Create Qubit</button>
+                    <button onclick="updateQubitState()">Update Qubit State</button>
                     <button onclick="clearQubit()">Clear</button>
                 </div>
             </div>
             <div class="carousel-item">
-                <p class="theory-text">Quantum Computing Theory: Qubits exist in superposition, represented on the Bloch sphere. Use the controls to visualize states!</p>
+                <p class="theory-text">Quantum Computing Theory: Qubits exist in superposition. |0⟩ points up (north pole), |1⟩ points down (south pole) on the Bloch sphere.</p>
             </div>
         </div>
-        <button class="carousel-btn left" onclick="moveCarousel(-1)">&lt;</button>
-        <button class="carousel-btn right" onclick="moveCarousel(1)">&gt;</button>
-    </div>
-
-    <script>
-        let currentSlide = 0;
-        const totalSlides = 2;
-
-        function moveCarousel(direction) {
-            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-            document.querySelector('.carousel').style.transform = `translateX(-${currentSlide * 100}%)`;
-        }
-
-        let scene, camera, renderer, qubitSphere, arrow;
-
-        function initQubit() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(400, 400);
-            document.getElementById('qubitCanvas').appendChild(renderer.domElement);
-
-            // White Bloch sphere
-            qubitSphere = new THREE.Mesh(
-                new THREE.SphereGeometry(1, 32, 32),
-                new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true })
-            );
-            scene.add(qubitSphere);
-
-            // Arrow from center
-            arrow = new THREE.Group();
-            const shaft = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.02, 0.02, 1, 12),
-                new THREE.MeshBasicMaterial({ color: 0xff0000 })
-            );
-            shaft.position.y = 0.5;
-            const head = new THREE.Mesh(
-                new THREE.ConeGeometry(0.08, 0.2, 32),
-                new THREE.MeshBasicMaterial({ color: 0xff0000 })
-            );
-            head.position.y = 1;
-            arrow.add(shaft, head);
-            scene.add(arrow);
-
-            camera.position.z = 3;
-            arrow.lookAt(0, 1, 0); // Start at |0⟩
-
-            animate();
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-        }
-
-        function createQubit() {
-            const qubitType = document.getElementById('qubitType').value;
-            let x, y, z;
-
-            if (qubitType === "random") {
-                const theta = Math.random() * Math.PI;
-                const phi = Math.random() * 2 * Math.PI;
-                x = Math.sin(theta) * Math.cos(phi);
-                y = Math.cos(theta);
-                z = Math.sin(theta) * Math.sin(phi);
-            } else if (qubitType === "zero") {
-                x = 0; y = 1; z = 0; // |0⟩
-            } else if (qubitType === "one") {
-                x = 0; y = -1; z = 0; // |1⟩
-            }
-
-            arrow.rotation.set(0, 0, 0);
-            arrow.lookAt(x, y, z);
-        }
-
-        function clearQubit() {
-            arrow.rotation.set(0, 0, 0);
-            arrow.lookAt(0, 1, 0); // Reset to |0⟩
-        }
-
-        initQubit();
-    </script>
-</body>
-</html>
+        <button class="carousel-btn left" onclick="moveCarousel(-
