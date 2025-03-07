@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBM Quantum Computer Simulation with Clifford Circuits, Superposition, and Entanglement.</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+        .carousel-container {
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-item {
+            min-width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #00ffff;
+            color: #000;
+            border: none;
+            padding: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            opacity: 0.8;
+        }
+        .carousel-btn:hover {
+            opacity: 1;
+        }
+        .left { left: 10px; }
+        .right { right: 10px; }
+        #qubitCanvas {
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+            border: 1px solid #fff;
+        }
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        select, button {
+            padding: 10px;
+            font-size: 14px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        select:hover, button:hover {
+            background: #555;
+        }
+        .theory-text {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        #circuitDiagram, #colorfulDiagrams {
+            margin: 20px auto;
+            width: 400px;
+            text-align: left;
+        }
+        svg {
+            background: #fff;
+            border-radius: 5px;
+        }
+        .description {
+            font-size: 14px;
+            color: #0ff;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>IBM Clifford Quantum Computer Simulation</h1>
+    <div class="carousel-container">
+        <div class="carousel">
+            <div class="carousel-item">
+                <div id="qubitCanvas"></div>
+                <div class="controls">
+                    <select id="qubitType">
+                        <option value="random">Random</option>
+                        <option value="zero">|0⟩</option>
+                        <option value="one">|1⟩</option>
+                    </select>
+                    <button onclick="updateQubitState()">Update Qubit State</button>
+                    <button onclick="setSuperposition()">Superposition</button>
+                    <button onclick="setEntanglement()">Entanglement</button>
+                    <button onclick="clearQubit()">Clear</button>
+                </div>
+                <div id="circuitDiagram"></div>
+                <div id="colorfulDiagrams"></div>
+            </div>
+            <div class="carousel-item">
+                <p class="theory-text">Quantum Computing Theory: Clifford circuits use gates like H and CNOT. |0⟩ points up, |1⟩ points down. Superposition and entanglement unlock quantum magic!</p>
+            </div>
+        </div>
+        <button class="carousel-btn left" onclick="moveCarousel(-1)"><</button>
+        <button class="carousel-btn right" onclick="moveCarousel(1)">></button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 2;
+
+        function moveCarousel(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            document.querySelector('.carousel').style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        let scene, camera, renderer, qubitSphere, arrow;
+
+        function initQubit() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(400, 400);
+            document.getElementById('qubitCanvas').appendChild(renderer.domElement);
+
+            qubitSphere = new THREE.Mesh(
+                new THREE.SphereGeometry(1, 32, 32),
+                new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true })
+            );
+            scene.add(qubitSphere);
+
+            arrow = new THREE.Group();
+            const shaft = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.02, 0.02, 1, 12),
+                new THREE.MeshBasicMaterial({ color: 0xff0000 })
+            );
+            shaft.position.y = 0.5;
+            const head = new THREE.Mesh(
+                new THREE.ConeGeometry(0.08, 0.2, 32),
+                new THREE.MeshBasicMaterial({ color: 0xff0000 })
+            );
+            head.position.y = 1;
+            arrow.add(shaft, head);
+            scene.add(arrow);
+
+            camera.position.z = 3;
+            arrow.rotation.set(0, 0, 0); // Start pointing up (|0⟩)
+
+            animate();
+            initDiagrams();
+            updateCircuitDiagram("zero"); // Initial circuit
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        function updateQubitState() {
+            const qubitType = document.getElementById('qubitType').value;
+            arrow.rotation.set(0, 0, 0);
+            updateCircuitDiagram(qubitType);
+
+            if (qubitType === "random") {
+                const theta = Math.random() * Math.PI;
+                const phi = Math.random() * 2 * Math.PI;
+                const x = Math.sin(theta) * Math.cos(phi);
+                const y = Math.cos(theta);
+                const z = Math.sin(theta) * Math.sin(phi);
+                arrow.lookAt(x, y, z);
+            } else if (qubitType === "zero") {
+                arrow.rotation.set(0, 0, 0); // Up
+            } else if (qubitType === "one") {
+                arrow.rotation.set(Math.PI, 0, 0); // Down
+            }
+        }
+
+        function setSuperposition() {
+            arrow.rotation.set(0, 0, 0);
+            arrow.lookAt(1, 0, 0); // |+⟩ state (Hadamard)
+            updateCircuitDiagram("superposition");
+        }
+
+        function setEntanglement() {
+            arrow.rotation.set(0, 0, 0);
+            arrow.lookAt(1, 1, 0); // Simplified entangled state visualization
+            updateCircuitDiagram("entanglement");
+        }
+
+        function clearQubit() {
+            arrow.rotation.set(0, 0, 0); // Reset to |0⟩ (up)
+            updateCircuitDiagram("zero");
+        }
+
+        function updateCircuitDiagram(state) {
+            const svg = document.getElementById('circuitDiagram');
+            svg.innerHTML = '';
+            const circuit = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            circuit.setAttribute("width", "400");
+            circuit.setAttribute("height", "150");
+
+            let description = '';
+            circuit.innerHTML = `
+                <line x1="20" y1="50" x2="380" y2="50" stroke="#000" stroke-width="2"/>
+                <text x="10" y="45" font-size="16">q₀</text>
+            `;
+
+            if (state === "superposition") {
+                circuit.innerHTML += `
+                    <rect x="100" y="30" width="40" height="40" fill="none" stroke="#00f" stroke-width="2"/>
+                    <text x="110" y="55" font-size="16" fill="#00f">H</text>`;
+                description = "Superposition: The Hadamard (H) gate creates a magical state where the qubit is equally |0⟩ and |1⟩—like a coin spinning in the air!";
+            } else if (state === "entanglement") {
+                circuit.innerHTML += `
+                    <line x1="20" y1="90" x2="380" y2="90" stroke="#000" stroke-width="2"/>
+                    <text x="10" y="85" font-size="16">q₁</text>
+                    <rect x="100" y="30" width="40" height="40" fill="none" stroke="#00f" stroke-width="2"/>
+                    <text x="110" y="55" font-size="16" fill="#00f">H</text>
+                    <circle cx="200" cy="50" r="10" fill="none" stroke="#0f0" stroke-width="2"/>
+                    <line x1="200" y1="50" x2="200" y2="90" stroke="#0f0" stroke-width="2"/>
+                    <circle cx="200" cy="90" r="10" fill="#0f0" stroke="#0f0" stroke-width="2"/>
+                `;
+                description = "Entanglement: H + CNOT links two qubits in a spooky dance—measuring one instantly sets the other, no matter the distance!";
+            } else if (state === "zero") {
+                circuit.innerHTML += `<text x="100" y="55" font-size="16">|0⟩</text>`;
+                description = "Starting point: Qubit in the pure |0⟩ state, pointing up.";
+            } else if (state === "one") {
+                circuit.innerHTML += `
+                    <rect x="100" y="30" width="40" height="40" fill="none" stroke="#000" stroke-width="2"/>
+                    <text x="110" y="55" font-size="16">X</text>`;
+                description = "Flipped: The X gate turns |0⟩ into |1⟩, pointing down.";
+            } else if (state === "random") {
+                circuit.innerHTML += `
+                    <rect x="100" y="30" width="40" height="40" fill="none" stroke="#f0f" stroke-width="2"/>
+                    <text x="110" y="55" font-size="16" fill="#f0f">R</text>`;
+                description = "Random: A wild qubit state anywhere on the Bloch sphere!";
+            }
+
+            svg.appendChild(circuit);
+            const descText = document.createElement("div");
+            descText.className = "description";
+            descText.textContent = description;
+            svg.appendChild(descText);
+        }
+
+        function initDiagrams() {
+            const diagrams = document.getElementById('colorfulDiagrams');
+            diagrams.innerHTML = `
+                <svg width="400" height="100">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#ff0" stroke-width="2"/>
+                    <line x1="50" y1="50" x2="50" y2="10" stroke="#f00" stroke-width="2"/>
+                    <text x="20" y="95" font-size="12" fill="#ff0">|0⟩</text>
+                    <circle cx="150" cy="50" r="40" fill="none" stroke="#0ff" stroke-width="2"/>
+                    <line x1="150" y1="50" x2="190" y2="50" stroke="#00f" stroke-width="2"/>
+                    <text x="120" y="95" font-size="12" fill="#0ff">|+⟩</text>
+                    <circle cx="250" cy="50" r="40" fill="none" stroke="#f0f" stroke-width="2"/>
+                    <line x1="250" y1="50" x2="210" y2="90" stroke="#f0f" stroke-width="2"/>
+                    <text x="220" y="95" font-size="12" fill="#f0f">Random</text>
+                </svg>
+            `;
+        }
+
+        initQubit();
+    </script>
+</body>
+</html>
