@@ -170,13 +170,13 @@
             scene.add(arrow);
 
             camera.position.set(0, 0, 3); // Camera looking at origin
-            arrow.rotation.set(0, 0, 0); // Start pointing up (y = 1)
+            arrow.rotation.set(0, 0, 0); // Start pointing up (y = 1) for |0⟩
 
-            console.log("Initial arrow direction: should point up (0, 1, 0)");
+            console.log("Initial arrow direction: pointing up (0, 1, 0) for |0⟩");
 
             animate();
             initDiagrams();
-            updateCircuitDiagram("zero");
+            updateCircuitDiagram("zero"); // Initial state is |0⟩
         }
 
         function animate() {
@@ -186,7 +186,7 @@
 
         function updateQubitState() {
             const qubitType = document.getElementById('qubitType').value;
-            console.log("Selected qubit type:", qubitType); // Debug the selection
+            console.log("Selected qubit type:", qubitType);
 
             if (qubitType === "random") {
                 const theta = Math.random() * Math.PI;
@@ -197,13 +197,13 @@
                 arrow.lookAt(x, y, z);
                 console.log("Random state:", { x, y, z });
             } else if (qubitType === "zero") {
-                arrow.lookAt(0, 1, 0); // |0⟩, north pole
+                arrow.lookAt(0, 1, 0); // |0⟩, north pole (up)
                 console.log("|0⟩ direction: (0, 1, 0)");
             } else if (qubitType === "one") {
-                arrow.lookAt(0, -1, 0); // |1⟩, south pole
+                arrow.lookAt(0, -1, 0); // |1⟩, south pole (down)
                 console.log("|1⟩ direction: (0, -1, 0)");
             } else {
-                console.log("Unexpected qubitType:", qubitType); // Catch any mismatch
+                console.log("Unexpected qubitType:", qubitType);
             }
             updateCircuitDiagram(qubitType);
         }
