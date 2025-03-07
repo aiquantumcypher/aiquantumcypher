@@ -3,11 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Quantum Cipher | Stealth Research Lab</title>
-    <meta name="description" content="AI Quantum Cipher - A cutting-edge research lab in stealth mode focusing on AI quantum architecture, XR, MR, EEG, and spatial computing.">
+    <title>Quantum Rune Oracle | AI Quantum Cipher</title>
+    <meta name="description" content="Invoke the Quantum Oracle to cast mystical runes powered by simulated quantum computing principles.">
     <style>
-        /* [Previous CSS remains unchanged until carousel section] */
-        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://aiquantumcypher.github.io/aiquantumcypher/quantum_hologram.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+        section {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 10px;
+        }
+        h2 {
+            color: #33ff99;
+            text-shadow: 0 0 8px #33ff99;
+        }
+        /* Carousel Styles */
         .carousel-container {
             width: 80%;
             max-width: 600px;
@@ -28,6 +55,7 @@
             box-sizing: border-box;
             padding: 10px;
         }
+        /* Rune Game Styles */
         .rune-game {
             text-align: center;
         }
@@ -54,68 +82,64 @@
             margin: 20px auto;
             border: 1px solid #fff;
         }
-        /* [Rest of previous CSS remains unchanged] */
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        button {
+            padding: 10px;
+            font-size: 14px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #555;
+        }
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-    <!-- [Previous HTML remains unchanged until Qiskit Carousel Section] -->
+    <header>
+        QUANTUM RUNE ORACLE <br>
+        Powered by AI Quantum Cipher
+    </header>
 
     <section>
-        <h2>IBM Quantum Computer Simulation with<br>Clifford Circuits, Superposition, and Entanglement</h2>
+        <h2>Invoke the Quantum Oracle</h2>
         <div class="carousel-container">
             <div class="carousel">
-                <!-- Slide 1: Qubit Visualization (unchanged) -->
-                <div class="carousel-item">
-                    <div id="qubitCanvas"></div>
-                    <div class="controls">
-                        <select id="qubitType">
-                            <option value="random">Random</option>
-                            <option value="zero">|0⟩</option>
-                            <option value="one">|1⟩</option>
-                        </select>
-                        <button onclick="updateQubitState()">Update Qubit State</button>
-                        <button onclick="setSuperposition()">Superposition</button>
-                        <button onclick="setEntanglement()">Entanglement</button>
-                        <button onclick="clearQubit()">Clear</button>
-                    </div>
-                    <div id="circuitDiagram"></div>
-                </div>
-                <!-- Slide 2: Quantum Rune Generator -->
+                <!-- Single Slide: Quantum Rune Generator -->
                 <div class="carousel-item">
                     <div class="rune-game">
-                        <h3>Invoke the Quantum Oracle</h3>
+                        <h3>Cast a Quantum Rune</h3>
                         <div id="runeCanvas" class="quantum-canvas"></div>
-                        <button onclick="generateQuantumRune()">Cast Quantum Rune</button>
+                        <div class="controls">
+                            <button onclick="generateQuantumRune()">Cast Rune</button>
+                        </div>
                         <div id="runeDisplay" class="rune-display"></div>
                         <div id="vikingMessage" class="viking-message"></div>
                     </div>
                 </div>
-                <!-- Slide 3: Guess Game (unchanged) -->
-                <div class="carousel-item">
-                    <div class="game-container">
-                        <h3>Guess the Qubit State!</h3>
-                        <p>Look at the Bloch sphere on Slide 1, then guess the qubit state.</p>
-                        <div class="controls">
-                            <button onclick="guessState('zero')">|0⟩</button>
-                            <button onclick="guessState('one')">|1⟩</button>
-                            <button onclick="guessState('random')">Random</button>
-                            <button onclick="newGame()">New Game</button>
-                        </div>
-                        <div id="gameFeedback" class="game-feedback"></div>
-                    </div>
-                </div>
             </div>
-            <button class="carousel-btn left" onclick="moveCarousel(-1)"><</button>
-            <button class="carousel-btn right" onclick="moveCarousel(1)">></button>
         </div>
     </section>
 
-    <!-- [Rest of previous HTML remains unchanged] -->
+    <footer>
+        <p>© 2025 AI Quantum Cipher. All Rights Reserved.</p>
+    </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script>
-        // [Previous JavaScript remains unchanged until new game logic]
-
         // Quantum Rune Generator
         let runeScene, runeCamera, runeRenderer, runeSphere;
         const runes = [
@@ -124,11 +148,31 @@
             "ᛚ", "ᛜ", "ᛞ", "ᛟ", "" // Blank rune as last element
         ];
         const vikingPowers = [
-            "Wealth flows to you like rivers to the sea",
-            "Strength surges through your warrior spirit",
-            "Protection shields you from all harm",
-            "Wisdom guides your path through the storm",
-            "The void speaks: destiny is yours to shape" // Blank rune message
+            "Wealth flows to you like rivers to the sea", // ᚠ (Fehu)
+            "Strength surges through your warrior spirit", // ᚢ (Uruz)
+            "Protection shields you from all harm", // ᚦ (Thurisaz)
+            "Wisdom guides your path through the storm", // ᚨ (Ansuz)
+            "Journey brings you victory and honor", // ᚱ (Raido)
+            "Fire ignites your inner power", // ᚲ (Kenaz)
+            "Gifts bless your noble deeds", // ᚷ (Gebo)
+            "Joy fills your days with light", // ᚹ (Wunjo)
+            "Resilience stands firm against chaos", // ᚺ (Hagalaz)
+            "Need shapes your destiny’s forge", // ᚾ (Nauthiz)
+            "Clarity freezes doubt in its tracks", // ᛁ (Isa)
+            "Harvest rewards your patient toil", // ᛃ (Jera)
+            "Transformation renews your spirit", // ᛇ (Eihwaz)
+            "Luck dances in your favor", // ᛈ (Perthro)
+            "Defense holds strong as the elk", // ᛉ (Algiz)
+            "Illumination shines upon your truth", // ᛋ (Sowilo)
+            "Force drives your will to triumph", // ᛏ (Tiwaz)
+            "Growth flourishes in your wake", // ᛒ (Berkano)
+            "Balance steadies your noble steed", // ᛖ (Ehwaz)
+            "Legacy builds your eternal name", // ᛗ (Mannaz)
+            "Flow carries you to new shores", // ᛚ (Laguz)
+            "Fertility blesses your sacred ground", // ᛜ (Ingwaz)
+            "Day breaks with victorious light", // ᛞ (Dagaz)
+            "Possession guards your ancestral might", // ᛟ (Othala)
+            "The void speaks: destiny is yours to shape" // Blank rune
         ];
 
         function initRuneSphere() {
@@ -172,7 +216,7 @@
             // Map quantum state to rune index
             const runeIndex = quantumState % runes.length;
             const rune = runes[runeIndex];
-            const message = vikingPowers[Math.min(runeIndex, vikingPowers.length - 1)];
+            const message = vikingPowers[runeIndex];
 
             // Display with mystical effect
             const runeDisplay = document.getElementById('runeDisplay');
@@ -188,16 +232,8 @@
             runeSphere.rotation.y += 0.1;
         }
 
-        // [Previous JavaScript initialization remains unchanged]
-        initQubit();
-        initRuneSphere(); // Initialize the new rune sphere
-        newGame();
-
-        // [Rest of previous JavaScript remains unchanged]
-        document.getElementById('email-link').addEventListener('click', function() {
-            let email = "info@aiquantumcypher.com";
-            window.location.href = "mailto:" + email;
-        });
+        // Initialize
+        initRuneSphere();
     </script>
 </body>
 </html>
