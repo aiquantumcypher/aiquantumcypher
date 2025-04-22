@@ -232,13 +232,12 @@
             padding: 20px;
             font-size: 14px;
         }
-        /* Updated styles for PDF iframe */
+        /* Minimal styles for PDF iframe and fallback */
         .pdf-iframe {
             width: 100%;
             height: 600px;
             border: none;
             border-radius: 10px;
-            overflow-y: auto;
             display: block;
         }
         .pdf-fallback {
@@ -279,13 +278,13 @@
         <img src="quantum_computer.jpg" alt="Quantum Computer" class="main-image">
     </section>
 
-    <!-- Updated section for PDF with Google Viewer and fallback -->
+    <!-- Added section for PDF with updated title -->
     <section>
         <div class="feature-box">
             <div class="feature-title">AI Quantum Movie Studio Pitch Deck</div>
-            <iframe src="https://docs.google.com/viewer?url=https://yourdomain.com/aiquantummoviestudio-compressed.pdf&embedded=true" class="pdf-iframe" title="AI Quantum Movie Studio Document"></iframe>
+            <iframe src="aiquantummoviestudio-compressed.pdf" class="pdf-iframe" title="AI Quantum Movie Studio Pitch Deck"></iframe>
             <div class="pdf-fallback">
-                <p>If the PDF doesn't display, <a href="https://yourdomain.com/aiquantummoviestudio-compressed.pdf" target="_blank">view/download it here</a>.</p>
+                <p>If the PDF doesn't display, <a href="aiquantummoviestudio-compressed.pdf" target="_blank">view/download it here</a>.</p>
             </div>
         </div>
     </section>
@@ -341,4 +340,351 @@
 
     <section id="about">
         <h2>Who We Are</h2>
-        <p>AI Quantum Cipher is an elite research lab operating in stealth
+        <p>AI Quantum Cipher is an elite research lab operating in stealth mode, pioneering advancements in AI, quantum architecture, EEG integration, and spatial computing.</p>
+        <p>Building on strategic partnerships with Google since 2008, we <strong>innovated on</strong> Google Glass (2013), consulted for Magic Leap (2018), and pushed the boundaries of spatial computing through Nreal/Xreal AR and MR technologies. Now, we drive augmented, virtual, and mixed reality into 2030 and beyond.</p>
+        <p>With Snap NextMind visual cortex technology and Neurosity Crown motor imagery training, we are redefining brain-machine interfaces (BMI) and brain-computer interfaces (BCI). Our work in AI-driven quantum computing, EEG-integrated spatial computing, and next-generation sensor technology is shaping the future of immersive AI experiences.</p>
+    </section>
+
+    <section id="focus">
+        <h2>Our Focus</h2>
+        <div class="features">
+            <div class="feature-box">
+                <div class="feature-title">AI Quantum Architecture</div>
+                <p>Advancing AI-driven quantum computing with Monte Carlo methods, tree-of-thought reasoning, and next-gen communication models.</p>
+                <ul>
+                    <li>Exploring hybrid AI-quantum architectures for computational intelligence</li>
+                    <li>Leveraging quantum-enhanced Monte Carlo simulations for AI decision-making</li>
+                    <li>Developing scalable quantum AI frameworks for complex problem-solving</li>
+                    <li>Developing quantum-resistant encryption protocols</li>
+                    <li>Enhancing blockchain security with AI-driven cryptography</li>
+                    <li>Ensuring data privacy in the era of quantum computing</li>
+                    <li>Key SDKs: Qiskit, D-Wave, Google Cirq, Microsoft Q#, Rigetti PyQuil, IonQ</li>
+                </ul>
+            </div>
+            <div class="feature-box">
+                <div class="feature-title">Spatial Computing</div>
+                <p>Developing immersive XR/MR experiences with FLIR, EEG, and AI integration.</p>
+                <ul>
+                    <li>Creating AI-driven mixed reality interfaces</li>
+                    <li>Integrating EEG for brain-controlled interactions</li>
+                    <li>Enhancing spatial computing with real-time sensor fusion</li>
+                    <li>Technologies: Google Glass, Meta Quest 3, Ray-Ban Meta AI Glasses, Magic Leap, Vuzix, Xreal/Nreal AR Mixed Reality Spatial Computing glasses, FLIR thermal imaging</li>
+                </ul>
+            </div>
+            <div class="feature-box">
+                <div class="feature-title">AI & Robotics</div>
+                <p>Leveraging AI-driven robotics for automation, security, and next-gen applications.</p>
+                <ul>
+                    <li>Building autonomous AI-powered robotic systems</li>
+                    <li>Developing intelligent swarm robotics for large-scale applications</li>
+                    <li>Enhancing robotics with edge AI and real-time decision-making</li>
+                    <li>AI Tools: TensorFlow, PyTorch, Hugging Face, OpenAI GPT, Meta Llama 3.3</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Join the Future</h2>
+        <p>We are looking for partners and pioneers who share our vision. Contact us for more information.</p>
+        <p><a id="email-link" class="cta">Contact Us</a></p>
+    </section>
+
+    <footer>
+        <p>© 2025 AI Quantum Cipher. All Rights Reserved.</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 3;
+        const carouselItems = document.querySelectorAll('.carousel-item');
+
+        function updateCarousel() {
+            if (window.innerWidth <= 600) {
+                carouselItems.forEach((item, index) => {
+                    item.classList.toggle('active', index === currentSlide);
+                });
+            } else {
+                document.querySelector('.carousel').style.transform = `translateX(-${currentSlide * 100}%)`;
+            }
+        }
+
+        function moveCarousel(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        updateCarousel();
+        window.addEventListener('resize', updateCarousel);
+
+        let scene, camera, renderer, qubitSphere, arrow;
+        let currentQubitState = "zero";
+
+        function initQubit() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(400, 400);
+            document.getElementById('qubitCanvas').appendChild(renderer.domElement);
+
+            qubitSphere = new THREE.Mesh(
+                new THREE.SphereGeometry(1, 32, 32),
+                new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true })
+            );
+            scene.add(qubitSphere);
+
+            arrow = new THREE.Group();
+            const shaft = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.02, 0.02, 1, 12),
+                new THREE.MeshBasicMaterial({ color: 0xff0000 })
+            );
+            shaft.position.y = 0.5;
+            const head = new THREE.Mesh(
+                new THREE.ConeGeometry(0.08, 0.2, 32),
+                new THREE.MeshBasicMaterial({ color: 0xff0000 })
+            );
+            head.position.y = 1;
+            arrow.add(shaft, head);
+            scene.add(arrow);
+
+            camera.position.z = 3;
+            arrow.rotation.set(0, 0, 0);
+            animateQubit();
+            updateCircuitDiagram("zero");
+        }
+
+        function animateQubit() {
+            requestAnimationFrame(animateQubit);
+            renderer.render(scene, camera);
+        }
+
+        function updateQubitState() {
+            const qubitType = document.getElementById('qubitType').value;
+            currentQubitState = qubitType;
+            arrow.rotation.set(0, 0, 0); // Reset rotation
+            updateCircuitDiagram(qubitType);
+
+            if (qubitType === "random") {
+                // Generate uniform random point on full sphere
+                const u = Math.random(); // Uniform random [0,1]
+                const v = Math.random(); // Uniform random [0,1]
+                const theta = 2 * Math.PI * u; // Azimuthal angle (0 to 2π)
+                const phi = Math.acos(2 * v - 1); // Polar angle (0 to π, full range)
+                const x = Math.sin(phi) * Math.cos(theta);
+                const y = Math.cos(phi); // y can be negative (bottom half)
+                const z = Math.sin(phi) * Math.sin(theta);
+                arrow.lookAt(x, y, z);
+                console.log(`Random state: x=${x.toFixed(2)}, y=${y.toFixed(2)}, z=${z.toFixed(2)}`); // Debug output
+            } else if (qubitType === "zero") {
+                arrow.rotation.set(0, 0, 0); // Points up
+            } else if (qubitType === "one") {
+                arrow.rotation.set(Math.PI, 0, 0); // Points down
+            }
+        }
+
+        function setSuperposition() {
+            arrow.rotation.set(0, 0, 0);
+            arrow.lookAt(1, 0, 0);
+            currentQubitState = "superposition";
+            updateCircuitDiagram("superposition");
+        }
+
+        function setEntanglement() {
+            arrow.rotation.set(0, 0, 0);
+            arrow.lookAt(1, 1, 0);
+            currentQubitState = "entanglement";
+            updateCircuitDiagram("entanglement");
+        }
+
+        function clearQubit() {
+            arrow.rotation.set(0, 0, 0);
+            currentQubitState = "zero";
+            updateCircuitDiagram("zero");
+        }
+
+        function updateCircuitDiagram(state) {
+            const svg = document.getElementById('circuitDiagram');
+            svg.innerHTML = '';
+            const circuit = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            circuit.setAttribute("width", "400");
+            circuit.setAttribute("height", "150");
+
+            let description = '';
+            circuit.innerHTML = `
+                <line x1="20" y1="50" x2="380" y2="50" stroke="#000" stroke-width="2"/>
+                <text x="10" y="45" font-size="16">q₀</text>
+            `;
+
+            if (state === "superposition") {
+                circuit.innerHTML += `
+                    <rect x="100" y="30" width="40" height="40" fill="none" stroke="#00f" stroke-width="2"/>
+                    <text x="110" y="55" font-size="16" fill="#00f">H</text>`;
+                description = "Superposition: The Hadamard (H) gate creates a magical state where the qubit is equally |0⟩ and |1⟩—like a coin spinning in the air!";
+            } else if (state === "entanglement") {
+                circuit.innerHTML += `
+                    <line x1="20" y1="90" x2="380" y2="90" stroke="#000" stroke-width="2"/>
+                    <text x="10" y="85" font-size="16">q₁</text>
+                    <rect x="100" y="30" width="40" height="40" fill="none" stroke="#00f" stroke-width="2"/>
+                    <text x="110" y="55" font-size="16" fill="#00f">H</text>
+                    <circle cx="200" cy="50" r="10" fill="none" stroke="#0f0" stroke-width="2"/>
+                    <line x1="200" y1="50" x2="200" y2="90" stroke="#0f0" stroke-width="2"/>
+                    <circle cx="200" cy="90" r="10" fill="#0f0" stroke="#0f0" stroke-width="2"/>
+                `;
+                description = "Entanglement: H + CNOT links two qubits in a spooky dance—measuring one instantly sets the other, no matter the distance!";
+            } else if (state === "zero") {
+                circuit.innerHTML += `<text x="100" y="55" font-size="16">|0⟩</text>`;
+                description = "Starting point: Qubit in the pure |0⟩ state, pointing up.";
+            } else if (state === "one") {
+                circuit.innerHTML += `
+                    <rect x="100" y="30" width="40" height="40" fill="none" stroke="#000" stroke-width="2"/>
+                    <text x="110" y="55" font-size="16">X</text>`;
+                description = "Flipped: The X gate turns |0⟩ into |1⟩, pointing down.";
+            } else if (state === "random") {
+                circuit.innerHTML += `
+                    <rect x="100" y="30" width="40" height="40" fill="none" stroke="#f0f" stroke-width="2"/>
+                    <text x="110" y="55" font-size="16" fill="#f0f">R</text>`;
+                description = "Random: A wild qubit state anywhere on the Bloch sphere!";
+            }
+
+            svg.appendChild(circuit);
+            const descText = document.createElement("div");
+            descText.className = "description";
+            descText.textContent = description;
+            svg.appendChild(descText);
+        }
+
+        let runeScene, runeCamera, runeRenderer, runeSphere;
+        const runes = [
+            "ᚠ", "ᚢ", "ᚦ", "ᚨ", "ᚱ", "ᚲ", "ᚷ", "ᚹ", "ᚺ", "ᚾ", 
+            "ᛁ", "ᛃ", "ᛇ", "ᛈ", "ᛉ", "ᛋ", "ᛏ", "ᛒ", "ᛖ", "ᛗ", 
+            "ᛚ", "ᛜ", "ᛞ", "ᛟ", ""
+        ];
+        const vikingPowers = [
+            "Wealth flows to you like rivers to the sea",
+            "Strength surges through your warrior spirit",
+            "Protection shields you from all harm",
+            "Wisdom guides your path through the storm",
+            "Journey brings you victory and honor",
+            "Fire ignites your inner power",
+            "Gifts bless your noble deeds",
+            "Joy fills your days with light",
+            "Resilience stands firm against chaos",
+            "Need shapes your destiny’s forge",
+            "Clarity freezes doubt in its tracks",
+            "Harvest rewards your patient toil",
+            "Transformation renews your spirit",
+            "Luck dances in your favor",
+            "Defense holds strong as the elk",
+            "Illumination shines upon your truth",
+            "Force drives your will to triumph",
+            "Growth flourishes in your wake",
+            "Balance steadies your noble steed",
+            "Legacy builds your eternal name",
+            "Flow carries you to new shores",
+            "Fertility blesses your sacred ground",
+            "Day breaks with victorious light",
+            "Possession guards your ancestral might",
+            "The void speaks: destiny is yours to shape"
+        ];
+
+        function initRuneSphere() {
+            runeScene = new THREE.Scene();
+            runeCamera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+            runeRenderer = new THREE.WebGLRenderer({ antialias: true });
+            runeRenderer.setSize(400, 400);
+            document.getElementById('runeCanvas').appendChild(runeRenderer.domElement);
+
+            runeSphere = new THREE.Mesh(
+                new THREE.SphereGeometry(1, 32, 32),
+                new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe: true })
+            );
+            runeScene.add(runeSphere);
+            runeCamera.position.z = 3;
+            animateRuneSphere();
+        }
+
+        function animateRuneSphere() {
+            requestAnimationFrame(animateRuneSphere);
+            runeSphere.rotation.x += 0.02;
+            runeSphere.rotation.y += 0.02;
+            runeRenderer.render(runeScene, runeCamera);
+        }
+
+        function generateQuantumRune() {
+            const qubitCount = 4;
+            let quantumState = 0;
+
+            for (let i = 0; i < qubitCount; i++) {
+                const hRandom = Math.random() > 0.5 ? 1 : 0;
+                const cnotRandom = Math.random() > 0.5 ? 1 : 0;
+                quantumState = (quantumState << 1) | (hRandom ^ cnotRandom);
+            }
+
+            const runeIndex = quantumState % runes.length;
+            const rune = runes[runeIndex];
+            const message = vikingPowers[runeIndex];
+
+            const runeDisplay = document.getElementById('runeDisplay');
+            runeDisplay.textContent = rune || "✨";
+            runeDisplay.classList.remove('active');
+            void runeDisplay.offsetWidth;
+            runeDisplay.classList.add('active');
+
+            document.getElementById('vikingMessage').textContent = message;
+
+            runeSphere.rotation.x += 0.1;
+            runeSphere.rotation.y += 0.1;
+        }
+
+        function newGame() {
+            const states = ["zero", "one", "random", "superposition", "entanglement"];
+            const randomState = states[Math.floor(Math.random() * states.length)];
+            currentQubitState = randomState;
+
+            arrow.rotation.set(0, 0, 0);
+            if (randomState === "random") {
+                const theta = Math.random() * 2 * Math.PI;
+                const phi = Math.acos(2 * Math.random() - 1);
+                const x = Math.sin(phi) * Math.cos(theta);
+                const y = Math.cos(phi);
+                const z = Math.sin(phi) * Math.sin(theta);
+                arrow.lookAt(x, y, z);
+            } else if (randomState === "zero") {
+                arrow.rotation.set(0, 0, 0);
+            } else if (randomState === "one") {
+                arrow.rotation.set(Math.PI, 0, 0);
+            } else if (randomState === "superposition") {
+                arrow.lookAt(1, 0, 0);
+            } else if (randomState === "entanglement") {
+                arrow.lookAt(1, 1, 0);
+            }
+
+            document.getElementById('gameFeedback').textContent = "New game started! Go to Slide 1 to see the qubit state, then guess!";
+        }
+
+        function guessState(guess) {
+            const feedback = document.getElementById('gameFeedback');
+            if (currentSlide !== 2) {
+                feedback.textContent = "Please go to Slide 3 to guess!";
+                return;
+            }
+
+            if (guess === currentQubitState) {
+                feedback.textContent = "Correct! The qubit state was " + currentQubitState + ".";
+            } else {
+                feedback.textContent = "Incorrect. The qubit state was " + currentQubitState + ". Try again!";
+            }
+        }
+
+        initQubit();
+        initRuneSphere();
+        newGame();
+
+        document.getElementById('email-link').addEventListener('click', function() {
+            let email = "info@aiquantumcypher.com";
+            window.location.href = "mailto:" + email;
+        });
+    </script>
+</body>
+</html>
