@@ -196,6 +196,9 @@
                 font-size: 16px;
                 padding: 0 5px;
             }
+            .pdf-container iframe {
+                height: 400px;
+            }
         }
         #about {
             /* Existing styles */
@@ -232,30 +235,13 @@
             padding: 20px;
             font-size: 14px;
         }
-        /* Minimal styles for PDF iframe and fallback */
-        .pdf-iframe {
+        .pdf-container {
             width: 100%;
-            height: 600px;
-            border: none;
+            max-width: 800px;
+            margin: 20px auto;
             border-radius: 10px;
-            display: block;
-        }
-        .pdf-fallback {
-            margin-top: 10px;
-            text-align: center;
-        }
-        .pdf-fallback a {
-            color: #0ff;
-            text-decoration: none;
-            font-size: 16px;
-        }
-        .pdf-fallback a:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 600px) {
-            .pdf-iframe {
-                height: 400px;
-            }
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            overflow: hidden;
         }
     </style>
 </head>
@@ -278,14 +264,12 @@
         <img src="quantum_computer.jpg" alt="Quantum Computer" class="main-image">
     </section>
 
-    <!-- Added section for PDF with updated title -->
+    <!-- New section with PDF viewer -->
     <section>
-        <div class="feature-box">
-            <div class="feature-title">AI Quantum Movie Studio Pitch Deck</div>
-            <iframe src="aiquantummoviestudio-compressed.pdf" class="pdf-iframe" title="AI Quantum Movie Studio Pitch Deck"></iframe>
-            <div class="pdf-fallback">
-                <p>If the PDF doesn't display, <a href="aiquantummoviestudio-compressed.pdf" target="_blank">view/download it here</a>.</p>
-            </div>
+        <h2>AI Quantum Movie Studio Pitch Deck</h2>
+        <p>Explore our vision for the future of quantum-enhanced filmmaking and content creation</p>
+        <div class="pdf-container">
+            <iframe src="aiquantummoviestudio-compressed.pdf" width="100%" height="600px" style="border: none;"></iframe>
         </div>
     </section>
 
@@ -570,7 +554,7 @@
             "Gifts bless your noble deeds",
             "Joy fills your days with light",
             "Resilience stands firm against chaos",
-            "Need shapes your destiny’s forge",
+            "Need shapes your destiny's forge",
             "Clarity freezes doubt in its tracks",
             "Harvest rewards your patient toil",
             "Transformation renews your spirit",
