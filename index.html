@@ -232,6 +232,18 @@
             padding: 20px;
             font-size: 14px;
         }
+        /* Added styles for PDF iframe */
+        .pdf-iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 10px;
+        }
+        @media (max-width: 600px) {
+            .pdf-iframe {
+                height: 400px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -251,6 +263,14 @@
         <h2>AI, Quantum Computing, and Mixed Reality / Spatial Computing Innovation</h2>
         <p>Pioneering next-generation technologies since 2008</p>
         <img src="quantum_computer.jpg" alt="Quantum Computer" class="main-image">
+    </section>
+
+    <!-- New section for PDF -->
+    <section>
+        <div class="feature-box">
+            <div class="feature-title">AI Quantum Movie Studio</div>
+            <iframe src="aiquantummoviestudio-compressed.pdf" class="pdf-iframe" title="AI Quantum Movie Studio Document"></iframe>
+        </div>
     </section>
 
     <section>
