@@ -274,7 +274,7 @@
                 <div style="margin-bottom: 20px;">
                     <strong>1. Thermal Shark AR Glasses</strong><br>
                     <p>Description: Predator-vision FLIR thermal + EEG-enabled MR glasses for Xreal and autonomous systems.</p>
-                    <p>Status: MVP Prototype Completed</p>
+                    <p>Status: MVP Prototype Completed – Winner of the Xreal AR Hackathon</p>
                 </div>
                 <div style="margin-bottom: 20px;">
                     <strong>2. NeuralWave AR Interface</strong><br>
@@ -288,7 +288,7 @@
                 </div>
                 <div style="margin-bottom: 20px;">
                     <strong>4. EchoField Drone Disruptor</strong><br>
-                    <p>Description: Portable, non-lethal ultrasonic drone disruption array with 100m range, AI targeting.</p>
+                    <p>Description: Portable, ultrasonic drone disruption array with 100m range, AI targeting.</p>
                     <p>Status: In Development</p>
                 </div>
             </div>
@@ -531,20 +531,19 @@
             updateCircuitDiagram(qubitType);
 
             if (qubitType === "random") {
-                // Generate uniform random point on full sphere
-                const u = Math.random(); // Uniform random [0,1]
-                const v = Math.random(); // Uniform random [0,1]
-                const theta = 2 * Math.PI * u; // Azimuthal angle (0 to 2π)
-                const phi = Math.acos(2 * v - 1); // Polar angle (0 to π, full range)
+                const u = Math.random();
+                const v = Math.random();
+                const theta = 2 * Math.PI * u;
+                const phi = Math.acos(2 * v - 1);
                 const x = Math.sin(phi) * Math.cos(theta);
-                const y = Math.cos(phi); // y can be negative (bottom half)
+                const y = Math.cos(phi);
                 const z = Math.sin(phi) * Math.sin(theta);
                 arrow.lookAt(x, y, z);
-                console.log(`Random state: x=${x.toFixed(2)}, y=${y.toFixed(2)}, z=${z.toFixed(2)}`); // Debug output
+                console.log(`Random state: x=${x.toFixed(2)}, y=${y.toFixed(2)}, z=${z.toFixed(2)}`);
             } else if (qubitType === "zero") {
-                arrow.rotation.set(0, 0, 0); // Points up
+                arrow.rotation.set(0, 0, 0);
             } else if (qubitType === "one") {
-                arrow.rotation.set(Math.PI, 0, 0); // Points down
+                arrow.rotation.set(Math.PI, 0, 0);
             }
         }
 
@@ -569,7 +568,7 @@
         }
 
         function updateCircuitDiagram(state) {
-            const svg =文档.getElementById('circuitDiagram');
+            const svg = document.getElementById('circuitDiagram');
             svg.innerHTML = '';
             const circuit = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             circuit.setAttribute("width", "400");
@@ -621,8 +620,8 @@
 
         let runeScene, runeCamera, runeRenderer, runeSphere;
         const runes = [
-            "ᚠ", "ᚢ", "ᚦ", "ᚨ", "ᚱ", "ᚲ", "ᚷ", "ᚹ", "ᚺ", "ᚾ", 
-            "ᛁ", "ᛃ", "ᛇ", "ᛈ", "ᛉ", "ᛋ", "ᛏ", "ᛒ", "ᛖ", "ᛗ", 
+            "ᚠ", "ᚢ", "ᚦ", "ᚨ", "ᚱ", "ᚲ", "ᚷ", "ᚹ", "ᚺ", "ᚾ",
+            "ᛁ", "ᛃ", "ᛇ", "ᛈ", "ᛉ", "ᛋ", "ᛏ", "ᛒ", "ᛖ", "ᛗ",
             "ᛚ", "ᛜ", "ᛞ", "ᛟ", ""
         ];
         const vikingPowers = [
