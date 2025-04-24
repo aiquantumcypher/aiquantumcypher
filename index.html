@@ -338,7 +338,7 @@
     <section>
         <h2>AI Quantum Cipher Video</h2>
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/DNrI-uU43yU?autoplay=1&loop=1&playlist=DNrI-uU43yU" title="AI Quantum Cipher Video" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/DNrI-uU43yU?autoplay=1&mute=1&loop=1&playlist=DNrI-uU43yU" title="AI Quantum Cipher Video" allow="autoplay" allowfullscreen></iframe>
         </div>
     </section>
 
@@ -636,7 +636,7 @@
                 const y = Math.cos(phi);
                 const z = Math.sin(phi) * Math.sin(theta);
                 arrow.lookAt(x, y, z);
-                console.log `\`Random state: x=${x.toFixed(2)}, y=${y.toFixed(2)}, z=${z.toFixed(2)} \``);
+                console.log(`Random state: x=${x.toFixed(2)}, y=${y.toFixed(2)}, z=${z.toFixed(2)}`);
             } else if (qubitType === "zero") {
                 arrow.rotation.set(0, 0, 0);
             } else if (qubitType === "one") {
@@ -838,9 +838,12 @@
             }
         }
 
-        initQubit();
-        initRuneSphere();
-        newGame();
+        // Ensure Qiskit game initializes after DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initQubit();
+            initRuneSphere();
+            newGame();
+        });
 
         document.getElementById('email-link').addEventListener('click', function() {
             let email = "info@aiquantumcypher.com";
