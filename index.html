@@ -225,6 +225,12 @@
             text-align: center;
             margin-bottom: 10px;
         }
+        /* Override feature-title for social section */
+        #social .feature-title {
+            color: #33ff99;
+            text-shadow: 0 0 8px #33ff99;
+            transform: translateX(10%); /* Align with social media icons */
+        }
         .feature-box ul {
             padding-left: 20px;
         }
@@ -268,6 +274,9 @@
                 font-size: 30px;
             }
             .social-media {
+                transform: translateX(5%); /* Adjusted for smaller screens */
+            }
+            #social .feature-title {
                 transform: translateX(5%); /* Adjusted for smaller screens */
             }
         }
