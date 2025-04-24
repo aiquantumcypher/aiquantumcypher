@@ -18,11 +18,18 @@
         }
         header {
             background: rgba(0, 0, 0, 0.8);
-            padding: 40px;
+            padding: 20px;
             text-align: center;
             font-size: 24px;
             font-weight: bold;
             line-height: 1.5;
+        }
+        .banner {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
         }
         nav {
             text-align: center;
@@ -288,13 +295,31 @@
                 font-size: 28px; /* Slightly smaller for mobile */
             }
         }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 20px auto;
+            border-radius: 10px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
     </style>
 </head>
 <body>
 
     <header>
-        AI QUANTUM CIPHER <br>
-        Stealth Research Lab
+        <img src="https://github.com/aiquantumcypher/aiquantumcypher.github.io/blob/main/aiqcbanner.jpg?raw=true" alt="AI Quantum Cipher Banner" class="banner">
+        <div>ai Quantum Cipher Stealth Research Lab</div>
     </header>
 
     <nav>
@@ -307,6 +332,14 @@
         <h2>AI, Quantum Computing, and Mixed Reality / Spatial Computing Innovation</h2>
         <p>Pioneering next-generation technologies since 2008</p>
         <img src="quantum_computer.jpg" alt="Quantum Computer" class="main-image">
+    </section>
+
+    <!-- YouTube Video Section -->
+    <section>
+        <h2>AI Quantum Cipher Video</h2>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/DNrI-uU43yU?autoplay=1&loop=1&playlist=DNrI-uU43yU" title="AI Quantum Cipher Video" allowfullscreen></iframe>
+        </div>
     </section>
 
     <!-- Build Pipeline Section -->
@@ -486,7 +519,7 @@
                     <li>Building autonomous AI-powered robotic systems</li>
                     <li>Developing intelligent swarm robotics for large-scale applications</li>
                     <li>Enhancing robotics with edge AI and real-time decision-making</li>
-                    <li>AI Tools: TensorFlow, PyTorch, Hugging Face, OpenAI GPT, Meta Llama 3.3</li>
+                    <li>AI Tools: TensorFlow, PyTorch, Hugging Face, OpenAI GPT, Meta Llama 4, Sentient AGI LLMs</li>
                 </ul>
             </div>
         </div>
@@ -520,7 +553,7 @@
     </section>
 
     <footer>
-        <p>© 2025 AI Quantum Cipher. All Rights Reserved.</p>
+        <p>© 2025 AI Quantum Cipher. All Rights Reserved. Powered by Meta Llama 4 and Sentient AGI LLMs.</p>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
@@ -603,7 +636,7 @@
                 const y = Math.cos(phi);
                 const z = Math.sin(phi) * Math.sin(theta);
                 arrow.lookAt(x, y, z);
-                console.log(`Random state: x=${x.toFixed(2)}, y=${y.toFixed(2)}, z=${z.toFixed(2)}`);
+                console.log `\`Random state: x=${x.toFixed(2)}, y=${y.toFixed(2)}, z=${z.toFixed(2)} \``);
             } else if (qubitType === "zero") {
                 arrow.rotation.set(0, 0, 0);
             } else if (qubitType === "one") {
